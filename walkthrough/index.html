@@ -147,7 +147,7 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 // Wall footprints [x0, y0, x1, y1] in plan metres (+x east, +y north),
 // exported from the Blender model: only pieces you would bump into.
-const SITE = {"walls":[[12.303,-2.812,12.613,-2.512],[12.303,-0.101,12.613,0.199],[12.303,2.61,12.613,2.91],[12.303,5.321,12.613,5.621],[12.303,8.032,12.613,8.332],[12.303,10.743,12.613,11.043],[12.303,13.454,12.613,13.754],[12.303,16.165,12.613,16.465],[-2.397,19.027,-2.097,19.337],[1.903,19.027,2.203,19.337],[4.503,19.027,4.803,19.337],[7.103,19.027,7.403,19.337],[9.703,19.027,10.003,19.337],[12.303,19.027,12.603,19.337],[-2.397,-5.683,-2.097,-5.373],[-0.164,-5.683,0.136,-5.373],[2.07,-5.683,2.37,-5.373],[4.303,-5.683,4.603,-5.373],[5.603,-5.683,5.903,-5.373],[7.836,-5.683,8.136,-5.373],[10.07,-5.683,10.37,-5.373],[12.303,-5.683,12.603,-5.373],[-2.396,19.326,-2.098,19.386],[1.904,19.326,2.233,19.386],[4.473,19.326,4.833,19.386],[7.073,19.326,7.433,19.386],[9.673,19.326,10.033,19.386],[12.273,19.326,12.602,19.386],[-2.407,-0.101,-2.097,0.199],[-2.407,2.61,-2.097,2.91],[-2.407,5.321,-2.097,5.621],[-2.407,8.032,-2.097,8.332],[-2.407,10.743,-2.097,11.043],[-2.407,13.454,-2.097,13.754],[-2.407,16.165,-2.097,16.465],[-2.407,-2.812,-2.097,-2.512],[12.453,-5.373,12.603,19.027],[2.053,19.177,12.453,19.326],[-2.247,-5.674,4.453,-5.523],[5.753,-5.674,12.453,-5.523],[-2.397,-5.373,-2.247,19.027],[11.472,13.655,11.682,14.332],[7.662,13.656,7.865,14.332],[1.0,13.657,1.204,14.333],[7.657,4.598,11.5,4.752],[9.498,6.152,9.652,8.147],[9.498,8.903,9.652,9.001],[7.657,9.001,11.5,9.155],[11.5,1.099,11.654,2.156],[11.5,2.156,11.654,3.955],[11.5,3.955,11.654,5.074],[11.5,5.074,11.654,5.676],[11.5,5.676,11.654,7.35],[11.5,7.35,11.654,7.95],[11.5,7.95,11.654,10.254],[11.5,10.254,11.654,12.052],[11.5,12.052,11.654,13.501],[6.152,13.501,6.38,13.655],[6.38,13.501,7.28,13.655],[7.28,13.501,11.654,13.655],[1.155,11.997,2.226,12.157],[2.226,11.997,4.024,12.157],[4.024,11.997,4.598,12.157],[5.802,11.997,5.998,12.157],[0.154,6.502,1.155,6.656],[7.657,1.099,7.857,1.253],[7.857,1.099,8.757,1.253],[8.757,1.099,11.5,1.253],[0.002,0.0,2.359,0.154],[3.255,0.0,4.458,0.154],[4.458,0.0,5.053,0.154],[5.053,0.0,7.657,0.154],[0.0,0.002,0.154,0.756],[0.0,0.756,0.154,2.555],[0.0,2.555,0.154,4.283],[0.0,4.283,0.154,6.082],[0.0,6.082,0.154,6.656],[1.001,6.656,1.155,7.106],[1.001,7.106,1.155,8.006],[1.001,8.006,1.155,10.647],[1.001,10.647,1.155,11.547],[1.001,11.547,1.155,12.157],[5.973,13.655,6.38,13.732],[6.38,13.655,7.28,13.732],[7.28,13.655,7.662,13.732],[11.49,4.762,11.5,5.074],[11.49,5.074,11.5,5.676],[11.49,5.676,11.5,5.988],[7.657,5.988,11.5,5.998],[7.657,4.752,11.5,4.762],[7.657,4.762,7.667,4.997],[7.657,5.9,7.667,5.988],[7.503,0.154,7.657,3.703],[7.503,4.598,7.657,4.997],[7.503,5.9,7.657,8.147],[7.503,8.903,7.657,9.155],[0.154,3.5,0.85,3.654],[3.556,3.5,5.501,3.654],[4.003,0.154,4.157,2.653],[4.003,3.402,4.157,3.5],[11.49,6.162,11.5,7.35],[11.49,7.35,11.5,7.95],[11.49,7.95,11.5,8.991],[9.652,8.991,11.5,9.001],[9.652,6.152,11.5,6.162],[9.652,6.162,9.662,8.147],[9.652,8.903,9.662,8.991],[6.152,6.502,6.201,6.656],[7.097,6.502,7.503,6.656],[5.998,6.075,6.152,13.655],[5.501,0.154,5.655,3.654],[7.657,5.998,11.5,6.152],[3.405,1.114,4.003,2.571],[3.323,0.179,4.003,1.084],[1.7,1.65,2.4,2.65],[0.779,0.154,1.124,0.752],[1.894,0.154,2.239,0.752],[1.129,0.154,1.889,0.804],[0.154,0.154,0.752,3.498],[-0.35,-3.25,0.15,-2.75],[10.05,-3.25,10.55,-2.75]],"stair":{"x0":5.655293088363954,"x1":7.503062117235345,"y0":0.15398075240594847,"y1":3.6535433070866135,"xa1":6.529177602799649,"xb0":6.62917760279965,"rise":0.18611111111111112,"going":0.28,"n1":9,"n_rise":18,"land_y1":1.4135433070866132,"land_z":1.675,"roof_z":3.35,"sr_x0":5.501312335958005,"sr_x1":7.660042869641294,"sr_y0":-0.003,"sr_y1":3.8075433070866134,"door_x0":6.66417760279965,"door_x1":7.468062117235345},"store":[6.62917760279965,0.15398075240594847,7.503062117235345,3.6535433070866135],"roof":[[0.15,0.15,7.507042869641293,6.506167979002624],[0.15,1.2488626421697289,11.503543307086614,6.506167979002624],[1.1508748906386683,1.2488626421697289,11.503543307086614,13.505293088363954]],"ground_z":-0.4,"plot":[-2.3969999999999985,-5.6735,12.603000000000002,19.3265],"lightmaps":{"LM_EXT":{"file":"lm_ext.webp","file_phone":"lm_ext_half.webp","intensity":1.01531,"sun":true,"encoding":"knee"},"LM_EXT_CEIL":{"file":"lm_ext.webp","file_phone":"lm_ext_half.webp","intensity":1.01531,"sun":true,"encoding":"knee"}},"light":{"sun_az":5.039854084970321,"sun_el":0.34197260687213704,"sun":[4.5176,4.2644,3.884],"sky":"sky.webp","sky_intensity":10.61741,"probe":"probe.webp","probe_intensity":5.9258,"vlight":{"LMV_PLANTS":{"intensity":1.01531,"encoding":"knee"}},"fog":[0.8442,0.8196,0.7856],"open_up":[1.3443,1.3707,1.6046],"open_down":[2.492,2.6011,2.6996],"house_box":[0.0,0.0,11.654,13.732],"look":[0.00136,0.0014,0.00145,0.0015,0.00156,0.0016,0.00166,0.00171,0.00179,0.00189,0.00206,0.0023,0.00272,0.0033,0.00417,0.0056,0.00792,0.01186,0.01897,0.03136,0.05087,0.0739,0.10005,0.12927,0.16179,0.19771,0.23693,0.27913,0.32364,0.37008,0.42138,0.47475,0.52772,0.57865,0.62666,0.67033,0.7107,0.74784,0.78193,0.81309,0.84091,0.86625,0.88943,0.91061,0.92999,0.94757,0.96345,0.97807],"look_range":[-12.47393,4.026069]},"tex":{"House_Door_Timber":{"file":"house_door_timber.png","mean":[0.6889,0.4457,0.2418]},"House_Floor_Porcelain_Beige":{"file":"tile_floor.png","mean":[0.8845,0.8377,0.7674]},"House_Floor_Stone_Matte":{"file":"tile_wet.png","mean":[0.7975,0.7507,0.6809]},"House_Ground_Compound":{"file":"tile_ground_compound.jpg","mean":[0.6792,0.5305,0.3592]},"House_Render_White":{"file":"house_render_white.png","mean":[0.9333,0.8941,0.8235]},"S_Laterite_Road":{"file":"tile_laterite_road.jpg","mean":[0.6863,0.4235,0.2588]},"S_Pavers_Grey_Herringbone":{"file":"pavers.jpg","mean":[0.4986,0.4868,0.4594]},"House_Ledgestone":{"file":"d_ledgestone.jpg","normal":"dn_ledgestone.jpg","file_phone":"d_ledgestone_half.jpg","normal_phone":"dn_ledgestone_half.jpg","mean":[0.5847,0.5294,0.4422]},"House_Sandstone_Panels":{"file":"d_sandstone_panels.jpg","normal":"dn_sandstone_panels.jpg","mean":[0.7835,0.7025,0.5709]},"House_Soffit_Timber":{"file":"d_soffit_timber.jpg","normal":"dn_soffit_timber.jpg","mean":[0.4864,0.3278,0.1802]}},"panos":[]};
+const SITE = {"walls":[[12.303,-2.812,12.613,-2.512],[12.303,-0.101,12.613,0.199],[12.303,2.61,12.613,2.91],[12.303,5.321,12.613,5.621],[12.303,8.032,12.613,8.332],[12.303,10.743,12.613,11.043],[12.303,13.454,12.613,13.754],[12.303,16.165,12.613,16.465],[-2.397,19.027,-2.097,19.337],[1.903,19.027,2.203,19.337],[4.503,19.027,4.803,19.337],[7.103,19.027,7.403,19.337],[9.703,19.027,10.003,19.337],[12.303,19.027,12.603,19.337],[-2.397,-5.683,-2.097,-5.373],[-0.164,-5.683,0.136,-5.373],[2.07,-5.683,2.37,-5.373],[4.303,-5.683,4.603,-5.373],[5.603,-5.683,5.903,-5.373],[7.836,-5.683,8.136,-5.373],[10.07,-5.683,10.37,-5.373],[12.303,-5.683,12.603,-5.373],[-2.396,19.326,-2.098,19.386],[1.904,19.326,2.233,19.386],[4.473,19.326,4.833,19.386],[7.073,19.326,7.433,19.386],[9.673,19.326,10.033,19.386],[12.273,19.326,12.602,19.386],[-2.407,-0.101,-2.097,0.199],[-2.407,2.61,-2.097,2.91],[-2.407,5.321,-2.097,5.621],[-2.407,8.032,-2.097,8.332],[-2.407,10.743,-2.097,11.043],[-2.407,13.454,-2.097,13.754],[-2.407,16.165,-2.097,16.465],[-2.407,-2.812,-2.097,-2.512],[12.453,-5.373,12.603,19.027],[2.053,19.177,12.453,19.326],[-2.247,-5.674,4.453,-5.523],[5.753,-5.674,12.453,-5.523],[-2.397,-5.373,-2.247,19.027],[11.472,13.655,11.682,14.332],[7.662,13.656,7.865,14.332],[1.0,13.657,1.204,14.333],[7.657,4.598,11.5,4.752],[9.498,6.152,9.652,8.147],[9.498,8.903,9.652,9.001],[7.657,9.001,11.5,9.155],[11.5,1.099,11.654,2.156],[11.5,2.156,11.654,3.955],[11.5,3.955,11.654,5.074],[11.5,5.074,11.654,5.676],[11.5,5.676,11.654,7.35],[11.5,7.35,11.654,7.95],[11.5,7.95,11.654,10.254],[11.5,10.254,11.654,12.052],[11.5,12.052,11.654,13.501],[6.152,13.501,6.38,13.655],[6.38,13.501,7.28,13.655],[7.28,13.501,11.654,13.655],[1.155,11.997,2.226,12.157],[2.226,11.997,4.024,12.157],[4.024,11.997,4.598,12.157],[5.802,11.997,5.998,12.157],[0.154,6.502,1.155,6.656],[7.657,1.099,7.857,1.253],[7.857,1.099,8.757,1.253],[8.757,1.099,11.5,1.253],[0.002,0.0,2.359,0.154],[3.255,0.0,4.458,0.154],[4.458,0.0,5.053,0.154],[5.053,0.0,7.657,0.154],[0.0,0.002,0.154,0.756],[0.0,0.756,0.154,2.555],[0.0,2.555,0.154,4.283],[0.0,4.283,0.154,6.082],[0.0,6.082,0.154,6.656],[1.001,6.656,1.155,7.106],[1.001,7.106,1.155,8.006],[1.001,8.006,1.155,10.647],[1.001,10.647,1.155,11.547],[1.001,11.547,1.155,12.157],[5.973,13.655,6.38,13.732],[6.38,13.655,7.28,13.732],[7.28,13.655,7.662,13.732],[11.49,4.762,11.5,5.074],[11.49,5.074,11.5,5.676],[11.49,5.676,11.5,5.988],[7.657,5.988,11.5,5.998],[7.657,4.752,11.5,4.762],[7.657,4.762,7.667,4.997],[7.657,5.9,7.667,5.988],[7.503,0.154,7.657,3.703],[7.503,4.598,7.657,4.997],[7.503,5.9,7.657,8.147],[7.503,8.903,7.657,9.155],[0.154,3.5,0.85,3.654],[3.556,3.5,5.501,3.654],[4.003,0.154,4.157,2.653],[4.003,3.402,4.157,3.5],[11.49,6.162,11.5,7.35],[11.49,7.35,11.5,7.95],[11.49,7.95,11.5,8.991],[9.652,8.991,11.5,9.001],[9.652,6.152,11.5,6.162],[9.652,6.162,9.662,8.147],[9.652,8.903,9.662,8.991],[6.152,6.502,6.201,6.656],[7.097,6.502,7.503,6.656],[5.998,6.075,6.152,13.655],[5.501,0.154,5.655,3.654],[7.657,5.998,11.5,6.152],[3.405,1.114,4.003,2.571],[3.323,0.179,4.003,1.084],[1.7,1.65,2.4,2.65],[0.779,0.154,1.124,0.752],[1.894,0.154,2.239,0.752],[1.129,0.154,1.889,0.804],[0.154,0.154,0.752,3.498],[-0.35,-3.25,0.15,-2.75],[10.05,-3.25,10.55,-2.75]],"stair":{"x0":5.655293088363954,"x1":7.503062117235345,"y0":0.15398075240594847,"y1":3.6535433070866135,"xa1":6.529177602799649,"xb0":6.62917760279965,"rise":0.18611111111111112,"going":0.28,"n1":9,"n_rise":18,"land_y1":1.4135433070866132,"land_z":1.675,"roof_z":3.35,"sr_x0":5.501312335958005,"sr_x1":7.660042869641294,"sr_y0":-0.003,"sr_y1":3.8075433070866134,"door_x0":6.66417760279965,"door_x1":7.468062117235345},"store":[6.62917760279965,0.15398075240594847,7.503062117235345,3.6535433070866135],"roof":[[0.15,0.15,7.507042869641293,6.506167979002624],[0.15,1.2488626421697289,11.503543307086614,6.506167979002624],[1.1508748906386683,1.2488626421697289,11.503543307086614,13.505293088363954]],"ground_z":-0.4,"plot":[-2.3969999999999985,-5.6735,12.603000000000002,19.3265],"lightmaps":{"LM_EXT":{"file":"lm_ext.webp","file_phone":"lm_ext_half.webp","intensity":1.01531,"sun":true,"encoding":"knee"},"LM_EXT_CEIL":{"file":"lm_ext.webp","file_phone":"lm_ext_half.webp","intensity":1.01531,"sun":true,"encoding":"knee"}},"light":{"sun_az":5.039854084970321,"sun_el":0.34197260687213704,"sun":[4.5176,4.2644,3.884],"sky":"sky.webp","sky_intensity":10.61741,"probe":"probe.webp","probe_intensity":5.9258,"vlight":{"LMV_PLANTS":{"intensity":1.01531,"encoding":"knee"}},"fog":[0.8442,0.8196,0.7856],"open_up":[1.3443,1.3707,1.6046],"open_down":[2.492,2.6011,2.6996],"house_box":[0.0,0.0,11.654,13.732],"look":[0.00136,0.0014,0.00145,0.0015,0.00156,0.0016,0.00166,0.00171,0.00179,0.00189,0.00206,0.0023,0.00272,0.0033,0.00417,0.0056,0.00792,0.01186,0.01897,0.03136,0.05087,0.0739,0.10005,0.12927,0.16179,0.19771,0.23693,0.27913,0.32364,0.37008,0.42138,0.47475,0.52772,0.57865,0.62666,0.67033,0.7107,0.74784,0.78193,0.81309,0.84091,0.86625,0.88943,0.91061,0.92999,0.94757,0.96345,0.97807],"look_range":[-12.47393,4.026069],"sky_phone":"sky_phone.webp","probe_phone":"probe_phone.webp"},"tex":{"House_Door_Timber":{"file":"house_door_timber.png","mean":[0.6889,0.4457,0.2418]},"House_Floor_Porcelain_Beige":{"file":"tile_floor.png","mean":[0.8845,0.8377,0.7674]},"House_Floor_Stone_Matte":{"file":"tile_wet.png","mean":[0.7975,0.7507,0.6809]},"House_Ground_Compound":{"file":"tile_ground_compound.jpg","mean":[0.6792,0.5305,0.3592]},"House_Render_White":{"file":"house_render_white.png","mean":[0.9333,0.8941,0.8235]},"S_Laterite_Road":{"file":"tile_laterite_road.jpg","mean":[0.6863,0.4235,0.2588]},"S_Pavers_Grey_Herringbone":{"file":"pavers.jpg","mean":[0.4986,0.4868,0.4594]},"House_Ledgestone":{"file":"d_ledgestone.jpg","normal":"dn_ledgestone.jpg","file_phone":"d_ledgestone_half.jpg","normal_phone":"dn_ledgestone_half.jpg","mean":[0.5847,0.5294,0.4422]},"House_Sandstone_Panels":{"file":"d_sandstone_panels.jpg","normal":"dn_sandstone_panels.jpg","mean":[0.7835,0.7025,0.5709],"file_phone":"d_sandstone_panels_phone.jpg"},"House_Soffit_Timber":{"file":"d_soffit_timber.jpg","normal":"dn_soffit_timber.jpg","mean":[0.4864,0.3278,0.1802],"file_phone":"d_soffit_timber_phone.jpg"}},"panos":[]};
 const WALLS = SITE.walls;
 
 // Plan metres -> three.js (Y up): (x, y) -> (x, -y)
@@ -212,7 +212,16 @@ const STOPS = [
 ];
 
 const stage = document.getElementById("stage");
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ antialias: !(navigator.maxTouchPoints > 0 && matchMedia("(pointer: coarse)").matches) });
+} catch (e) {
+  // Chrome turns WebGL off for a site after it runs out of graphics memory
+  document.getElementById("loadText").textContent =
+    "3D is switched off in this browser right now (it can happen after the phone ran out of memory). Close the browser completely, open it again and reload this page.";
+  document.getElementById("loadBar").parentElement.hidden = true;
+  throw e;
+}
 // Phones get a lighter path: no post-processing chain (its full-screen
 // half-float buffers, 4x MSAA copies and AO targets ran iPhones out of GPU
 // memory), a smaller shadow map, lower pixel ratio, one 360 photo in memory.
@@ -299,7 +308,7 @@ const scene = new THREE.Scene();
 // as the reflections on the outside surfaces and glass
 let skyEnv = null;
 if (LIGHT && LIGHT.sky) {
-  new THREE.TextureLoader().load("tex/" + LIGHT.sky, (t) => {
+  new THREE.TextureLoader().load("tex/" + (PHONE && LIGHT.sky_phone || LIGHT.sky), (t) => {
     t.mapping = THREE.EquirectangularReflectionMapping;
     t.colorSpace = THREE.SRGBColorSpace;
     scene.background = t;
@@ -307,7 +316,7 @@ if (LIGHT && LIGHT.sky) {
     if (!LIGHT.probe) setEnv(pmrem.fromEquirectangular(t).texture);
   });
   // reflections: Cycles 360 of the yard (falls back to the sky)
-  if (LIGHT.probe) new THREE.TextureLoader().load("tex/" + LIGHT.probe, (t) => {
+  if (LIGHT.probe) new THREE.TextureLoader().load("tex/" + (PHONE && LIGHT.probe_phone || LIGHT.probe), (t) => {
     t.mapping = THREE.EquirectangularReflectionMapping;
     t.colorSpace = THREE.SRGBColorSpace;
     setEnv(pmrem.fromEquirectangular(t).texture);
@@ -745,7 +754,32 @@ function loadScript(src) {
     document.head.appendChild(s);
   });
 }
+async function fetchGlb() {
+  // the plain .glb (GitHub Pages serves it): no base64 strings to decode, so
+  // a phone holds one copy of the model instead of four
+  const res = await fetch("rahilu_model.glb");
+  if (!res.ok) throw new Error("no .glb");
+  const total = +res.headers.get("content-length") || 0;
+  if (!res.body || !total) return new Uint8Array(await res.arrayBuffer());
+  const buf = new Uint8Array(total), rd = res.body.getReader();
+  for (let o = 0; ;) {
+    const { done, value } = await rd.read();
+    if (done) break;
+    buf.set(value, o); o += value.length;
+    loadBar.style.width = `${5 + 70 * o / total}%`;
+  }
+  return buf;
+}
 async function loadModel() {
+  loadBar.style.width = "5%";
+  let glb = null;
+  try { glb = await fetchGlb(); } catch (e) { glb = null; }
+  if (glb) {
+    loadText.textContent = "Building the house…";
+    loadBar.style.width = "80%";
+    await new Promise((r) => setTimeout(r, 30));
+    return finishModel(await new GLTFLoader().parseAsync(glb.buffer, ""));
+  }
   loadBar.style.width = "35%";
   // base64 GLB in parts (artifacts cap each file at 16 MB)
   for (let i = 0; i < 2; i++) {
@@ -770,7 +804,9 @@ async function loadModel() {
   const buf = new Uint8Array(total);
   for (let i = 0, o = 0; i < bytes.length; o += bytes[i].length, i++) buf.set(bytes[i], o);
   bytes.length = 0;
-  const gltf = await new GLTFLoader().parseAsync(buf.buffer, "");
+  return finishModel(await new GLTFLoader().parseAsync(buf.buffer, ""));
+}
+async function finishModel(gltf) {
   // Textures ship as plain files in tex/ (images embedded in the GLB don't
   // load inside the artifact frame).  Each material shows its image's
   // average colour first, so it keeps its colour even if an image fails.
@@ -779,7 +815,8 @@ async function loadModel() {
   const texCache = {};
   const aniso = renderer.capabilities.getMaxAnisotropy();
   function applyTexture(m, t0) {
-    const t = PHONE && t0.file_phone ? { ...t0, file: t0.file_phone, normal: t0.normal_phone || t0.normal } : t0;
+    // phones: the half-size copy and no normal map (GPU memory)
+    const t = PHONE ? { ...t0, file: t0.file_phone || t0.file, normal: null } : t0;
     m.color.setRGB(t.mean[0], t.mean[1], t.mean[2], THREE.SRGBColorSpace);
     if (!texCache[t.file]) {
       texCache[t.file] = new Promise((ok) => texLoader.load(
