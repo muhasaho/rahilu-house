@@ -236,7 +236,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 // it replaces three's AgX sigmoid, so greys and contrast match the renders.
 // "lite": a phone that lost its 3-D context with the baked extras reloads
 // without them (the plain lighting that always fitted); ?lite=0 / ?lite=1
-const LITE_KEY = "rahilu_lite";
+const LITE_KEY = "rahilu_lite_1793788656";     // per build: a new publish tries the full version again
 const LITE_Q = new URLSearchParams(location.search).get("lite");
 if (LITE_Q === "0") localStorage.removeItem(LITE_KEY);
 const LITE = LITE_Q === "1" || (LITE_Q !== "0" && localStorage.getItem(LITE_KEY) === "1");
