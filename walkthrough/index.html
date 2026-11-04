@@ -759,21 +759,26 @@ async function fetchGlb() {
   // a phone holds one copy of the model instead of four
   const res = await fetch("rahilu_model.glb");
   if (!res.ok) throw new Error("no .glb");
+  // content-length is the gzipped size on GitHub Pages: collect the chunks
+  // and use it for the progress bar only
   const total = +res.headers.get("content-length") || 0;
-  if (!res.body || !total) return new Uint8Array(await res.arrayBuffer());
-  const buf = new Uint8Array(total), rd = res.body.getReader();
-  for (let o = 0; ;) {
+  if (!res.body) return new Uint8Array(await res.arrayBuffer());
+  const rd = res.body.getReader(), chunks = [];
+  let o = 0;
+  for (;;) {
     const { done, value } = await rd.read();
     if (done) break;
-    buf.set(value, o); o += value.length;
-    loadBar.style.width = `${5 + 70 * o / total}%`;
+    chunks.push(value); o += value.length;
+    if (total) loadBar.style.width = `${5 + 70 * Math.min(1, o / (total * 1.6))}%`;
   }
+  const buf = new Uint8Array(o);
+  for (let i = 0, p = 0; i < chunks.length; p += chunks[i].length, chunks[i++] = null) buf.set(chunks[i], p);
   return buf;
 }
 async function loadModel() {
   loadBar.style.width = "5%";
   let glb = null;
-  try { glb = await fetchGlb(); } catch (e) { glb = null; }
+  try { glb = await fetchGlb(); } catch (e) { console.warn("glb", e); glb = null; }
   if (glb) {
     loadText.textContent = "Building the house…";
     loadBar.style.width = "80%";
