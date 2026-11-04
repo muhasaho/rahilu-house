@@ -87,6 +87,8 @@
          margin: 14px auto 0; overflow: hidden; }
   .bar i { display: block; height: 100%; width: 0; background: var(--accent); }
   @media (prefers-reduced-motion: reduce) { .compass .needle { transition: none; } }
+/* ?shot=...: fixed camera for render comparisons, no HUD */
+body.shot .hud, body.shot #loading { display: none !important; }
 </style>
 
 <div id="stage"></div>
@@ -145,11 +147,19 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 // Wall footprints [x0, y0, x1, y1] in plan metres (+x east, +y north),
 // exported from the Blender model: only pieces you would bump into.
-const SITE = {"walls":[[12.303,-2.812,12.613,-2.512],[12.303,-0.101,12.613,0.199],[12.303,2.61,12.613,2.91],[12.303,5.321,12.613,5.621],[12.303,8.032,12.613,8.332],[12.303,10.743,12.613,11.043],[12.303,13.454,12.613,13.754],[12.303,16.165,12.613,16.465],[-2.397,19.027,-2.097,19.337],[1.903,19.027,2.203,19.337],[4.503,19.027,4.803,19.337],[7.103,19.027,7.403,19.337],[9.703,19.027,10.003,19.337],[12.303,19.027,12.603,19.337],[-2.397,-5.683,-2.097,-5.373],[-0.164,-5.683,0.136,-5.373],[2.07,-5.683,2.37,-5.373],[4.303,-5.683,4.603,-5.373],[5.603,-5.683,5.903,-5.373],[7.836,-5.683,8.136,-5.373],[10.07,-5.683,10.37,-5.373],[12.303,-5.683,12.603,-5.373],[-2.396,19.326,-2.098,19.386],[1.904,19.326,2.233,19.386],[4.473,19.326,4.833,19.386],[7.073,19.326,7.433,19.386],[9.673,19.326,10.033,19.386],[12.273,19.326,12.602,19.386],[-2.407,-0.101,-2.097,0.199],[-2.407,2.61,-2.097,2.91],[-2.407,5.321,-2.097,5.621],[-2.407,8.032,-2.097,8.332],[-2.407,10.743,-2.097,11.043],[-2.407,13.454,-2.097,13.754],[-2.407,16.165,-2.097,16.465],[-2.407,-2.812,-2.097,-2.512],[12.453,-5.373,12.603,19.027],[2.053,19.177,12.453,19.326],[-2.247,-5.674,4.453,-5.523],[5.753,-5.674,12.453,-5.523],[-2.397,-5.373,-2.247,19.027],[11.472,13.655,11.682,14.332],[7.662,13.656,7.865,14.332],[1.0,13.657,1.204,14.333],[7.657,4.598,11.5,4.752],[9.498,6.152,9.652,8.147],[9.498,8.903,9.652,9.001],[7.657,9.001,11.5,9.155],[11.5,1.099,11.654,2.156],[11.5,2.156,11.654,3.955],[11.5,3.955,11.654,5.074],[11.5,5.074,11.654,5.676],[11.5,5.676,11.654,7.35],[11.5,7.35,11.654,7.95],[11.5,7.95,11.654,10.254],[11.5,10.254,11.654,12.052],[11.5,12.052,11.654,13.501],[6.152,13.501,6.38,13.655],[6.38,13.501,7.28,13.655],[7.28,13.501,11.654,13.655],[1.155,11.997,2.226,12.157],[2.226,11.997,4.024,12.157],[4.024,11.997,4.598,12.157],[5.802,11.997,5.998,12.157],[0.154,6.502,1.155,6.656],[7.657,1.099,7.857,1.253],[7.857,1.099,8.757,1.253],[8.757,1.099,11.5,1.253],[0.002,0.0,2.359,0.154],[3.255,0.0,4.458,0.154],[4.458,0.0,5.053,0.154],[5.053,0.0,7.657,0.154],[0.0,0.002,0.154,0.756],[0.0,0.756,0.154,2.555],[0.0,2.555,0.154,4.283],[0.0,4.283,0.154,6.082],[0.0,6.082,0.154,6.656],[1.001,6.656,1.155,7.106],[1.001,7.106,1.155,8.006],[1.001,8.006,1.155,10.647],[1.001,10.647,1.155,11.547],[1.001,11.547,1.155,12.157],[5.973,13.655,6.38,13.732],[6.38,13.655,7.28,13.732],[7.28,13.655,7.662,13.732],[11.49,4.762,11.5,5.074],[11.49,5.074,11.5,5.676],[11.49,5.676,11.5,5.988],[7.657,5.988,11.5,5.998],[7.657,4.752,11.5,4.762],[7.657,4.762,7.667,4.997],[7.657,5.9,7.667,5.988],[7.503,0.154,7.657,3.703],[7.503,4.598,7.657,4.997],[7.503,5.9,7.657,8.147],[7.503,8.903,7.657,9.155],[0.154,3.5,0.85,3.654],[3.556,3.5,5.501,3.654],[4.003,0.154,4.157,2.653],[4.003,3.402,4.157,3.5],[11.49,6.162,11.5,7.35],[11.49,7.35,11.5,7.95],[11.49,7.95,11.5,8.991],[9.652,8.991,11.5,9.001],[9.652,6.152,11.5,6.162],[9.652,6.162,9.662,8.147],[9.652,8.903,9.662,8.991],[6.152,6.502,6.201,6.656],[7.097,6.502,7.503,6.656],[5.998,6.075,6.152,13.655],[5.501,0.154,5.655,3.654],[7.657,5.998,11.5,6.152],[3.405,1.114,4.003,2.571],[3.323,0.179,4.003,1.084],[1.7,1.65,2.4,2.65],[0.779,0.154,1.124,0.752],[1.894,0.154,2.239,0.752],[1.129,0.154,1.889,0.804],[0.154,0.154,0.752,3.498],[-0.35,-3.25,0.15,-2.75],[10.05,-3.25,10.55,-2.75]],"stair":{"x0":5.655293088363954,"x1":7.503062117235345,"y0":0.15398075240594847,"y1":3.6535433070866135,"xa1":6.529177602799649,"xb0":6.62917760279965,"rise":0.18611111111111112,"going":0.28,"n1":9,"n_rise":18,"land_y1":1.4135433070866132,"land_z":1.675,"roof_z":3.35,"sr_x0":5.501312335958005,"sr_x1":7.660042869641294,"sr_y0":-0.003,"sr_y1":3.8075433070866134,"door_x0":6.66417760279965,"door_x1":7.468062117235345},"store":[6.62917760279965,0.15398075240594847,7.503062117235345,3.6535433070866135],"roof":[[0.15,0.15,7.507042869641293,6.506167979002624],[0.15,1.2488626421697289,11.503543307086614,6.506167979002624],[1.1508748906386683,1.2488626421697289,11.503543307086614,13.505293088363954]],"ground_z":-0.4,"plot":[-2.3969999999999985,-5.6735,12.603000000000002,19.3265],"tex":{"House_Door_Timber":{"file":"house_door_timber.png","mean":[0.6875,0.4444,0.2405]},"House_Floor_Porcelain_Beige":{"file":"tile_floor.png","mean":[0.8845,0.8377,0.7674]},"House_Floor_Stone_Matte":{"file":"tile_wet.png","mean":[0.7975,0.7507,0.6809]},"House_Ground_Compound":{"file":"ground.png","mean":[0.7136,0.5673,0.379]},"House_Ledgestone":{"file":"ledgestone.png","mean":[0.7409,0.6479,0.5112]},"House_Render_White":{"file":"house_render_white.png","mean":[0.9333,0.8941,0.8235]},"S_Laterite_Road":{"file":"s_laterite_road.png","mean":[0.6902,0.4235,0.2588]},"S_Pavers_Grey_Herringbone":{"file":"pavers.jpg","mean":[0.4989,0.4835,0.4605]}},"panos":[]};
+const SITE = {"walls":[[12.303,-2.812,12.613,-2.512],[12.303,-0.101,12.613,0.199],[12.303,2.61,12.613,2.91],[12.303,5.321,12.613,5.621],[12.303,8.032,12.613,8.332],[12.303,10.743,12.613,11.043],[12.303,13.454,12.613,13.754],[12.303,16.165,12.613,16.465],[-2.397,19.027,-2.097,19.337],[1.903,19.027,2.203,19.337],[4.503,19.027,4.803,19.337],[7.103,19.027,7.403,19.337],[9.703,19.027,10.003,19.337],[12.303,19.027,12.603,19.337],[-2.397,-5.683,-2.097,-5.373],[-0.164,-5.683,0.136,-5.373],[2.07,-5.683,2.37,-5.373],[4.303,-5.683,4.603,-5.373],[5.603,-5.683,5.903,-5.373],[7.836,-5.683,8.136,-5.373],[10.07,-5.683,10.37,-5.373],[12.303,-5.683,12.603,-5.373],[-2.396,19.326,-2.098,19.386],[1.904,19.326,2.233,19.386],[4.473,19.326,4.833,19.386],[7.073,19.326,7.433,19.386],[9.673,19.326,10.033,19.386],[12.273,19.326,12.602,19.386],[-2.407,-0.101,-2.097,0.199],[-2.407,2.61,-2.097,2.91],[-2.407,5.321,-2.097,5.621],[-2.407,8.032,-2.097,8.332],[-2.407,10.743,-2.097,11.043],[-2.407,13.454,-2.097,13.754],[-2.407,16.165,-2.097,16.465],[-2.407,-2.812,-2.097,-2.512],[12.453,-5.373,12.603,19.027],[2.053,19.177,12.453,19.326],[-2.247,-5.674,4.453,-5.523],[5.753,-5.674,12.453,-5.523],[-2.397,-5.373,-2.247,19.027],[11.472,13.655,11.682,14.332],[7.662,13.656,7.865,14.332],[1.0,13.657,1.204,14.333],[7.657,4.598,11.5,4.752],[9.498,6.152,9.652,8.147],[9.498,8.903,9.652,9.001],[7.657,9.001,11.5,9.155],[11.5,1.099,11.654,2.156],[11.5,2.156,11.654,3.955],[11.5,3.955,11.654,5.074],[11.5,5.074,11.654,5.676],[11.5,5.676,11.654,7.35],[11.5,7.35,11.654,7.95],[11.5,7.95,11.654,10.254],[11.5,10.254,11.654,12.052],[11.5,12.052,11.654,13.501],[6.152,13.501,6.38,13.655],[6.38,13.501,7.28,13.655],[7.28,13.501,11.654,13.655],[1.155,11.997,2.226,12.157],[2.226,11.997,4.024,12.157],[4.024,11.997,4.598,12.157],[5.802,11.997,5.998,12.157],[0.154,6.502,1.155,6.656],[7.657,1.099,7.857,1.253],[7.857,1.099,8.757,1.253],[8.757,1.099,11.5,1.253],[0.002,0.0,2.359,0.154],[3.255,0.0,4.458,0.154],[4.458,0.0,5.053,0.154],[5.053,0.0,7.657,0.154],[0.0,0.002,0.154,0.756],[0.0,0.756,0.154,2.555],[0.0,2.555,0.154,4.283],[0.0,4.283,0.154,6.082],[0.0,6.082,0.154,6.656],[1.001,6.656,1.155,7.106],[1.001,7.106,1.155,8.006],[1.001,8.006,1.155,10.647],[1.001,10.647,1.155,11.547],[1.001,11.547,1.155,12.157],[5.973,13.655,6.38,13.732],[6.38,13.655,7.28,13.732],[7.28,13.655,7.662,13.732],[11.49,4.762,11.5,5.074],[11.49,5.074,11.5,5.676],[11.49,5.676,11.5,5.988],[7.657,5.988,11.5,5.998],[7.657,4.752,11.5,4.762],[7.657,4.762,7.667,4.997],[7.657,5.9,7.667,5.988],[7.503,0.154,7.657,3.703],[7.503,4.598,7.657,4.997],[7.503,5.9,7.657,8.147],[7.503,8.903,7.657,9.155],[0.154,3.5,0.85,3.654],[3.556,3.5,5.501,3.654],[4.003,0.154,4.157,2.653],[4.003,3.402,4.157,3.5],[11.49,6.162,11.5,7.35],[11.49,7.35,11.5,7.95],[11.49,7.95,11.5,8.991],[9.652,8.991,11.5,9.001],[9.652,6.152,11.5,6.162],[9.652,6.162,9.662,8.147],[9.652,8.903,9.662,8.991],[6.152,6.502,6.201,6.656],[7.097,6.502,7.503,6.656],[5.998,6.075,6.152,13.655],[5.501,0.154,5.655,3.654],[7.657,5.998,11.5,6.152],[3.405,1.114,4.003,2.571],[3.323,0.179,4.003,1.084],[1.7,1.65,2.4,2.65],[0.779,0.154,1.124,0.752],[1.894,0.154,2.239,0.752],[1.129,0.154,1.889,0.804],[0.154,0.154,0.752,3.498],[-0.35,-3.25,0.15,-2.75],[10.05,-3.25,10.55,-2.75]],"stair":{"x0":5.655293088363954,"x1":7.503062117235345,"y0":0.15398075240594847,"y1":3.6535433070866135,"xa1":6.529177602799649,"xb0":6.62917760279965,"rise":0.18611111111111112,"going":0.28,"n1":9,"n_rise":18,"land_y1":1.4135433070866132,"land_z":1.675,"roof_z":3.35,"sr_x0":5.501312335958005,"sr_x1":7.660042869641294,"sr_y0":-0.003,"sr_y1":3.8075433070866134,"door_x0":6.66417760279965,"door_x1":7.468062117235345},"store":[6.62917760279965,0.15398075240594847,7.503062117235345,3.6535433070866135],"roof":[[0.15,0.15,7.507042869641293,6.506167979002624],[0.15,1.2488626421697289,11.503543307086614,6.506167979002624],[1.1508748906386683,1.2488626421697289,11.503543307086614,13.505293088363954]],"ground_z":-0.4,"plot":[-2.3969999999999985,-5.6735,12.603000000000002,19.3265],"lightmaps":{"LM_EXT":{"file":"lm_ext.webp","file_phone":"lm_ext_half.webp","intensity":1.01531,"sun":true,"encoding":"knee"},"LM_EXT_CEIL":{"file":"lm_ext.webp","file_phone":"lm_ext_half.webp","intensity":1.01531,"sun":true,"encoding":"knee"}},"light":{"sun_az":5.039854084970321,"sun_el":0.34197260687213704,"sun":[4.5176,4.2644,3.884],"sky":"sky.webp","sky_intensity":10.61741,"probe":"probe.webp","probe_intensity":5.9258,"vlight":{"LMV_PLANTS":{"intensity":1.01531,"encoding":"knee"}},"fog":[0.8442,0.8196,0.7856],"open_up":[1.3443,1.3707,1.6046],"open_down":[2.492,2.6011,2.6996],"house_box":[0.0,0.0,11.654,13.732],"look":[0.00136,0.0014,0.00145,0.0015,0.00156,0.0016,0.00166,0.00171,0.00179,0.00189,0.00206,0.0023,0.00272,0.0033,0.00417,0.0056,0.00792,0.01186,0.01897,0.03136,0.05087,0.0739,0.10005,0.12927,0.16179,0.19771,0.23693,0.27913,0.32364,0.37008,0.42138,0.47475,0.52772,0.57865,0.62666,0.67033,0.7107,0.74784,0.78193,0.81309,0.84091,0.86625,0.88943,0.91061,0.92999,0.94757,0.96345,0.97807],"look_range":[-12.47393,4.026069]},"tex":{"House_Door_Timber":{"file":"house_door_timber.png","mean":[0.6889,0.4457,0.2418]},"House_Floor_Porcelain_Beige":{"file":"tile_floor.png","mean":[0.8845,0.8377,0.7674]},"House_Floor_Stone_Matte":{"file":"tile_wet.png","mean":[0.7975,0.7507,0.6809]},"House_Ground_Compound":{"file":"tile_ground_compound.jpg","mean":[0.6792,0.5305,0.3592]},"House_Render_White":{"file":"house_render_white.png","mean":[0.9333,0.8941,0.8235]},"S_Laterite_Road":{"file":"tile_laterite_road.jpg","mean":[0.6863,0.4235,0.2588]},"S_Pavers_Grey_Herringbone":{"file":"pavers.jpg","mean":[0.4986,0.4868,0.4594]},"House_Ledgestone":{"file":"d_ledgestone.jpg","normal":"dn_ledgestone.jpg","file_phone":"d_ledgestone_half.jpg","normal_phone":"dn_ledgestone_half.jpg","mean":[0.5847,0.5294,0.4422]},"House_Sandstone_Panels":{"file":"d_sandstone_panels.jpg","normal":"dn_sandstone_panels.jpg","mean":[0.7835,0.7025,0.5709]},"House_Soffit_Timber":{"file":"d_soffit_timber.jpg","normal":"dn_soffit_timber.jpg","mean":[0.4864,0.3278,0.1802]}},"panos":[]};
 const WALLS = SITE.walls;
 
 // Plan metres -> three.js (Y up): (x, y) -> (x, -y)
 const EYE = 1.6, RADIUS = 0.22, SPEED = 1.5;
+// ?shot=x,y,z,yaw,pitch,vfov[,shiftY]: pin the camera to a Cycles camera
+// (plan metres, radians, degrees; shiftY as Blender's lens shift) and hide
+// the HUD, for side-by-side comparisons with the renders
+// (scripts/wt_compare.py).  window.RAHILU_READY turns true once the model
+// and every texture are in.
+const SHOT = new URLSearchParams(location.search).get("shot")?.split(",").map(Number) || null;
+if (SHOT) document.body.classList.add("shot");
+// (scene exposed for inspection in shot mode only)
 
 // Roof stair (build_house.py): U-shaped, two flights side by side in the
 // stairwell.  Flight 1 (west) rises south from the hall to the half
@@ -212,14 +222,45 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 // AgX, the renders' view transform, with Blender's "Medium High Contrast"
 // look (contrast 1.2 about mid grey in AgX's log space); exposure as the
 // room renders (-0.2 EV)
-THREE.ShaderChunk.tonemapping_pars_fragment = THREE.ShaderChunk.tonemapping_pars_fragment
-  .replace("color = agxDefaultContrastApprox( color );",
-           "color = clamp( ( color - 0.606 ) * 1.2 + 0.606, 0.0, 1.0 );\n\tcolor = agxDefaultContrastApprox( color );");
+// The baked exports carry Blender's own grey curve for the renders' view
+// transform and look (AgX + Punchy, measured by scripts/bake_exterior.py):
+// it replaces three's AgX sigmoid, so greys and contrast match the renders.
+const LIGHT = SITE.light || null;
+if (LIGHT && LIGHT.look) {
+  // display value -> the sigmoid's output (three then applies ^2.2 and the
+  // outset matrix), sampled on AgX's log range
+  const eotf = (v) => (v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  const ys = LIGHT.look.map((d) => Math.pow(eotf(d), 1 / 2.2));
+  const n = ys.length;
+  // piecewise linear as a sum of hinges (GLSL 1 has no const arrays and the
+  // output pass is GLSL 1): f(x) = y0 + sum_i (s_i - s_i-1) max(x - i, 0)
+  let terms = "", prev = 0;
+  for (let i = 0; i < n - 1; i++) {
+    const sl = ys[i + 1] - ys[i];
+    terms += `\n  r += ${(sl - prev).toFixed(7)} * max( x - ${i}.0, 0.0 );`;
+    prev = sl;
+  }
+  THREE.ShaderChunk.tonemapping_pars_fragment = THREE.ShaderChunk.tonemapping_pars_fragment
+    .replace("vec3 AgXToneMapping(",
+      `vec3 rLook( vec3 u ) {
+  vec3 x = clamp( u, 0.0, 1.0 ) * ${n - 1}.0;
+  vec3 r = vec3( ${ys[0].toFixed(7)} );${terms}
+  return r;
+}
+vec3 AgXToneMapping(`)
+    .replace("color = agxDefaultContrastApprox( color );",
+             "color = rLook( color );");
+} else {
+  THREE.ShaderChunk.tonemapping_pars_fragment = THREE.ShaderChunk.tonemapping_pars_fragment
+    .replace("color = agxDefaultContrastApprox( color );",
+             "color = clamp( ( color - 0.606 ) * 1.2 + 0.606, 0.0, 1.0 );\n\tcolor = agxDefaultContrastApprox( color );");
+}
 renderer.toneMapping = THREE.AgXToneMapping;
 const EXPOSURE = Math.pow(2, -0.2);
 renderer.toneMappingExposure = EXPOSURE;
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+// baked export: PCF with a radius, soft like the renders' 1 degree sun
+renderer.shadowMap.type = LIGHT ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap;
 renderer.shadowMap.autoUpdate = false;     // the sun never moves: draw once
 stage.appendChild(renderer.domElement);
 // if the phone drops the 3-D context (out of graphics memory), say so and
@@ -254,7 +295,36 @@ const scene = new THREE.Scene();
   scene.background = sky;
   scene.backgroundIntensity = 1.25;
 }
+// baked export: the renders' Cycles sky (same grade) as the background, and
+// as the reflections on the outside surfaces and glass
+let skyEnv = null;
+if (LIGHT && LIGHT.sky) {
+  new THREE.TextureLoader().load("tex/" + LIGHT.sky, (t) => {
+    t.mapping = THREE.EquirectangularReflectionMapping;
+    t.colorSpace = THREE.SRGBColorSpace;
+    scene.background = t;
+    scene.backgroundIntensity = LIGHT.sky_intensity;
+    if (!LIGHT.probe) setEnv(pmrem.fromEquirectangular(t).texture);
+  });
+  // reflections: Cycles 360 of the yard (falls back to the sky)
+  if (LIGHT.probe) new THREE.TextureLoader().load("tex/" + LIGHT.probe, (t) => {
+    t.mapping = THREE.EquirectangularReflectionMapping;
+    t.colorSpace = THREE.SRGBColorSpace;
+    setEnv(pmrem.fromEquirectangular(t).texture);
+  });
+}
+function setEnv(tex) {
+  skyEnv = tex;
+  for (const m of skyEnvMats) { m.envMap = skyEnv; m.needsUpdate = true; }
+}
+const ENV_I = LIGHT ? (LIGHT.probe ? LIGHT.probe_intensity : LIGHT.sky_intensity) : 1;
+const skyEnvMats = [];
 scene.fog = new THREE.Fog(0xd6e2ea, 35, 90);
+// baked export: haze the colour of the renders' horizon, further out
+if (LIGHT && LIGHT.fog) {
+  scene.fog.color.setRGB(LIGHT.fog[0], LIGHT.fog[1], LIGHT.fog[2], THREE.SRGBColorSpace);
+  scene.fog.near = 150; scene.fog.far = 1500;  // a light haze; the sky's lower half is far ground
+}
 // soft studio reflections for the glossy surfaces (paint, glass, lacquer)
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
@@ -264,8 +334,12 @@ scene.add(hemi);
 scene.add(new THREE.AmbientLight(0xffffff, 0.3));
 // Kunkujang, 31 May, 18:00: sun on bearing 289 deg (west-north-west),
 // ~20 deg up, as in the renders.  Plan (x east, y north) -> three (x, z = -y).
-const SUN_AZ = 289 * Math.PI / 180, SUN_EL = 21 * Math.PI / 180;
+const SUN_AZ = LIGHT ? LIGHT.sun_az : 289 * Math.PI / 180;
+const SUN_EL = LIGHT ? LIGHT.sun_el : 21 * Math.PI / 180;
 const sun = new THREE.DirectionalLight(0xfff3e2, 3.2);
+// baked export: the renders' sun (strength, white balance and exposure
+// folded into a linear colour, intensity 1)
+if (LIGHT) { sun.color.setRGB(LIGHT.sun[0], LIGHT.sun[1], LIGHT.sun[2], THREE.LinearSRGBColorSpace); sun.intensity = 1; }
 const SUN_C = new THREE.Vector3(5.1, 0, -6.8);        // middle of the plot
 sun.position.set(Math.sin(SUN_AZ) * Math.cos(SUN_EL), Math.sin(SUN_EL),
                  -Math.cos(SUN_AZ) * Math.cos(SUN_EL)).multiplyScalar(45).add(SUN_C);
@@ -276,6 +350,26 @@ sun.castShadow = true;
   sun.shadow.mapSize.set(big ? 4096 : 2048, big ? 4096 : 2048);
   const c = sun.shadow.camera;
   c.left = -20; c.right = 20; c.top = 20; c.bottom = -20; c.near = 5; c.far = 95;
+  if (LIGHT) {
+    // fit the frustum to the plot (and the house's height) as the sun sees
+    // it: sharper shadow edges than a fixed 40 m square
+    const P = SITE.plot, pts = [];
+    // the plot plus the shadows it throws outside (2.4 m wall, low sun)
+    for (const x of [P[0] - 8, P[2] + 8]) for (const y of [P[1] - 8, P[3] + 8])
+      for (const z of [-0.5, 5.0]) pts.push(new THREE.Vector3(x, z, -y));
+    const look = new THREE.Matrix4().lookAt(sun.position, SUN_C, new THREE.Vector3(0, 1, 0));
+    const inv = new THREE.Matrix4().makeRotationFromQuaternion(
+      new THREE.Quaternion().setFromRotationMatrix(look)).invert();
+    let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
+    for (const p of pts) {
+      const q = p.clone().sub(sun.position).applyMatrix4(inv);
+      x0 = Math.min(x0, q.x); x1 = Math.max(x1, q.x); y0 = Math.min(y0, q.y); y1 = Math.max(y1, q.y);
+    }
+    c.left = x0; c.right = x1; c.bottom = y0; c.top = y1;
+    c.updateProjectionMatrix();
+    sun.shadow.radius = 4;
+    sun.shadow.blurSamples = 16;
+  }
   sun.shadow.bias = -0.0004;
   sun.shadow.normalBias = 0.03;
   sun.shadow.radius = 3;
@@ -603,8 +697,10 @@ function inBakedRoom() {
 // the bake has the roof on, so the overview (roof off, sun from above) uses
 // live light everywhere
 function applyBaked() {
-  const on = bakedOn && mode !== "over";
-  for (const m of bakedMeshes) m.material = on ? m.userData.baked : m.userData.live;
+  for (const m of bakedMeshes) {
+    const use = bakedOn && (mode !== "over" || m.userData.baked.userData.outdoor);
+    m.material = use ? m.userData.baked : m.userData.live;
+  }
 }
 bakeBtn.addEventListener("click", () => {
   bakedOn = !bakedOn;
@@ -682,7 +778,8 @@ async function loadModel() {
   const texLoader = new THREE.TextureLoader();
   const texCache = {};
   const aniso = renderer.capabilities.getMaxAnisotropy();
-  function applyTexture(m, t) {
+  function applyTexture(m, t0) {
+    const t = PHONE && t0.file_phone ? { ...t0, file: t0.file_phone, normal: t0.normal_phone || t0.normal } : t0;
     m.color.setRGB(t.mean[0], t.mean[1], t.mean[2], THREE.SRGBColorSpace);
     if (!texCache[t.file]) {
       texCache[t.file] = new Promise((ok) => texLoader.load(
@@ -724,13 +821,16 @@ async function loadModel() {
   // are cut out of the shader, reflections are kept (dimmed where it's dark).
   const LM = SITE.lightmaps || {};
   const lmCache = {}, bakedMat = {};
-  const BEGIN = THREE.ShaderChunk.lights_fragment_begin
-    .replace(/defined\( RE_Direct \)/g, "defined( BAKED_NEVER )")
-    .replace("defined( RE_Direct_RectArea )", "defined( BAKED_NEVER )")
+  // outside bake (lm.sun): the lightmap holds everything but the sun's
+  // direct light, so the real-time sun (and its shadows) stays on
+  const BEGIN_SUN = THREE.ShaderChunk.lights_fragment_begin
     .replace("vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );",
              "vec3 irradiance = vec3( 0.0 );")
     .replace("( NUM_HEMI_LIGHTS > 0 )", "defined( BAKED_NEVER )")
     .replace("defined( USE_LIGHT_PROBES )", "defined( BAKED_NEVER )");
+  const BEGIN = BEGIN_SUN
+    .replace(/defined\( RE_Direct \)/g, "defined( BAKED_NEVER )")
+    .replace("defined( RE_Direct_RectArea )", "defined( BAKED_NEVER )");
   const MAPS = THREE.ShaderChunk.lights_fragment_maps
     .replace("iblIrradiance += getIBLIrradiance( geometryNormal );", "") + `
 #if defined( USE_LIGHTMAP ) && defined( RE_IndirectSpecular )
@@ -756,22 +856,94 @@ async function loadModel() {
     const b = m.clone();
     b.lightMap = lightmap(PHONE && lm.file_phone ? lm.file_phone : lm.file);
     // the file holds L / scale with the renders' exposure folded in
-    b.lightMapIntensity = lm.scale * Math.PI / Math.pow(2, lm.exposure ?? -0.2);
+    b.lightMapIntensity = lm.intensity ??
+      lm.scale * Math.PI / Math.pow(2, lm.exposure ?? -0.2);
+    // "knee": stored as e = x / (1 + x), decoded here
+    const maps = lm.encoding === "knee" ? MAPS.replace(
+      "vec3 lightMapIrradiance = lightMapTexel.rgb * lightMapIntensity;",
+      "vec3 lmE = min( lightMapTexel.rgb, vec3( 0.996 ) );\n\tvec3 lightMapIrradiance = lmE / ( 1.0 - lmE ) * lightMapIntensity;") : MAPS;
     b.onBeforeCompile = (sh) => {
       sh.fragmentShader = sh.fragmentShader
-        .replace("#include <lights_fragment_begin>", BEGIN)
-        .replace("#include <lights_fragment_maps>", MAPS);
+        .replace("#include <lights_fragment_begin>", lm.sun ? BEGIN_SUN : BEGIN)
+        .replace("#include <lights_fragment_maps>", maps);
     };
-    b.customProgramCacheKey = () => "baked";
+    b.customProgramCacheKey = () => (lm.sun ? "baked_sun_" + (lm.encoding || "") : "baked");
+    if (lm.sun) {
+      b.userData.outdoor = true;
+      if (LIGHT && LIGHT.sky) { b.envMapIntensity = ENV_I; skyEnvMats.push(b); if (skyEnv) b.envMap = skyEnv; }
+    }
     return (bakedMat[key] = b);
   }
   function lmOf(n) {
     for (let o = n; o; o = o.parent) if (LM[o.name]) return [o, LM[o.name]];
     return [null, null];
   }
+  // baked export: outdoor things that aren't baked (plants, trees, ground,
+  // fittings) take the bake's open-sky light instead of the indoor fill
+  const OPEN = LIGHT && LIGHT.open_up && LIGHT.house_box ? (() => {
+    const f = (v) => `vec3( ${v.map((c) => c.toFixed(4)).join(", ")} )`;
+    return THREE.ShaderChunk.lights_fragment_begin
+      .replace("vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );",
+        `vec3 irradiance = mix( ${f(LIGHT.open_down)}, ${f(LIGHT.open_up)}, 0.5 + 0.5 * dot( geometryNormal, hemisphereLights[ 0 ].direction ) );`)
+      .replace("( NUM_HEMI_LIGHTS > 0 )", "defined( BAKED_NEVER )")
+      .replace("defined( USE_LIGHT_PROBES )", "defined( BAKED_NEVER )");
+  })() : null;
+  const openMat = {};
+  function outdoorMaterial(m) {
+    if (openMat[m.uuid]) return openMat[m.uuid];
+    const o = m.clone();
+    o.onBeforeCompile = (sh) => {
+      sh.fragmentShader = sh.fragmentShader
+        .replace("#include <lights_fragment_begin>", OPEN)
+        .replace("#include <lights_fragment_maps>", MAPS);
+    };
+    o.customProgramCacheKey = () => "open_sky";
+    if (LIGHT.sky) { o.envMapIntensity = ENV_I; skyEnvMats.push(o); if (skyEnv) o.envMap = skyEnv; }
+    return (openMat[m.uuid] = o);
+  }
+  // baked export: plants carry their baked light per vertex (knee-encoded
+  // in the colour attribute); it replaces the fill, the sun stays live
+  const VL = (LIGHT && LIGHT.vlight) || {};
+  const vlMat = {};
+  function vertexLitMaterial(m, info) {
+    if (vlMat[m.uuid]) return vlMat[m.uuid];
+    const o = m.clone();
+    o.vertexColors = true;
+    const K = info.intensity.toFixed(5);
+    const begin = THREE.ShaderChunk.lights_fragment_begin
+      .replace("vec3 irradiance = getAmbientLightIrradiance( ambientLightColor );",
+        `vec3 vlE = min( vColor.rgb, vec3( 0.996 ) );\n\tvec3 irradiance = vlE / ( 1.0 - vlE ) * ${K};`)
+      .replace("( NUM_HEMI_LIGHTS > 0 )", "defined( BAKED_NEVER )")
+      .replace("defined( USE_LIGHT_PROBES )", "defined( BAKED_NEVER )");
+    o.onBeforeCompile = (sh) => {
+      sh.fragmentShader = sh.fragmentShader
+        .replace("#include <color_fragment>", "")
+        .replace("#include <lights_fragment_begin>", begin)
+        .replace("#include <lights_fragment_maps>", MAPS);
+    };
+    o.customProgramCacheKey = () => "vertex_lit";
+    o.envMapIntensity = ENV_I; skyEnvMats.push(o); if (skyEnv) o.envMap = skyEnv;
+    return (vlMat[m.uuid] = o);
+  }
+  function vlOf(n) {
+    for (let o = n; o; o = o.parent) if (VL[o.name]) return VL[o.name];
+    return null;
+  }
+  const HB = LIGHT && LIGHT.house_box, _bb = new THREE.Box3(), _c = new THREE.Vector3();
   const allMats = [];
   gltf.scene.traverse((n) => {
     if (!n.isMesh) return;
+    const vli = vlOf(n);
+    if (vli && n.geometry.attributes.color && n.material.isMeshStandardMaterial) {
+      n.material = vertexLitMaterial(n.material, vli);
+    } else if (OPEN && !lmOf(n)[1] && n.material.isMeshStandardMaterial && !n.material.transparent) {
+      _bb.setFromObject(n).getCenter(_c);
+      const px = _c.x, py = -_c.z;      // three -> plan
+      if (n.name === "GROUND" || n.parent?.name === "GROUND" ||
+          px < HB[0] || px > HB[2] || py < HB[1] || py > HB[3]) {
+        n.material = outdoorMaterial(n.material);
+      }
+    }
     const tr = Array.isArray(n.material) ? n.material.some((m) => m.transparent)
                                          : n.material.transparent;
     n.castShadow = !tr;              // glass lets the sun through
@@ -783,7 +955,7 @@ async function loadModel() {
       n.material = n.userData.baked;
       bakedMeshes.push(n);
       allMats.push(n.userData.live);
-      if (!root.name.endsWith("_CEIL") && !root.userData.box) {
+      if (!lm.sun && !root.name.endsWith("_CEIL") && !root.userData.box) {
         root.userData.box = new THREE.Box3().setFromObject(root);
         bakedBoxes.push(root.userData.box);
       }
@@ -792,6 +964,12 @@ async function loadModel() {
   });
   for (const m of allMats) {
     if (m.transparent) m.depthWrite = false;
+    if (LIGHT && LIGHT.sky && m.transparent && /glass/i.test(m.name) && !m.userData.sky) {
+      m.userData.sky = true;
+      m.envMapIntensity = ENV_I * 2.5;     // the pane's alpha halves it again
+      skyEnvMats.push(m);
+      if (skyEnv) m.envMap = skyEnv;
+    }
     if (TEX[m.name] && !m.userData.tex) {
       m.userData.tex = true;
       applyTexture(m, TEX[m.name]);
@@ -807,6 +985,29 @@ async function loadModel() {
   updateButtons();
   loadBar.style.width = "100%";
   document.getElementById("loading").hidden = true;
+  await Promise.all([...Object.values(texCache), ...Object.values(lmCache).map((t) =>
+    new Promise((ok) => { const c = () => (t.image ? ok() : setTimeout(c, 100)); c(); }))]);
+  if (SHOT) { window.RAHILU_SCENE = scene; window.RAHILU_CAMERA = camera; window.RAHILU_THREE = THREE; }
+  // ?debug=class: baked = green, outdoor open-sky = blue, indoor fill = red
+  // ?debug=light: textures off (white), to see the light alone
+  const DEBUG = new URLSearchParams(location.search).get("debug");
+  if (DEBUG) scene.traverse((n) => {
+    if (!n.isMesh) return;
+    const ms = [].concat(n.material).map((m) => {
+      const k = m.clone();
+      if (DEBUG === "class") {
+        k.map = null; k.normalMap = null;
+        k.color.set(m.userData.outdoor ? 0x30d040 : m.customProgramCacheKey?.() === "open_sky" ? 0x3060ff : 0xff4030);
+      } else if (DEBUG === "light") {
+        k.map = null; k.color.set(0xd0d0d0);
+      }
+      k.onBeforeCompile = m.onBeforeCompile; k.customProgramCacheKey = m.customProgramCacheKey;
+      k.userData = m.userData;
+      return k;
+    });
+    n.material = Array.isArray(n.material) ? ms : ms[0];
+  });
+  setTimeout(() => (window.RAHILU_READY = true), 500);
 }
 loadModel().catch((err) => {
   loadText.textContent = `The model didn't load (${err.message}). Reload the page to try again.`;
@@ -849,6 +1050,16 @@ renderer.setAnimationLoop(() => {
     player.z += (target - player.z) * Math.min(1, dt * 10);   // ease up/down steps
     camera.position.set(player.x, player.z + EYE, -player.y);
     camera.rotation.set(player.pitch, player.yaw, 0);
+    if (SHOT) {
+      camera.position.set(SHOT[0], SHOT[2], -SHOT[1]);
+      camera.rotation.set(SHOT[4], SHOT[3], 0);
+      if (camera.fov !== SHOT[5] || (SHOT[6] && !camera.view)) {
+        camera.fov = SHOT[5];
+        const w = stage.clientWidth, h = stage.clientHeight;
+        if (SHOT[6]) camera.setViewOffset(w, h, 0, -SHOT[6] * Math.max(w, h), w, h);
+        camera.updateProjectionMatrix();
+      }
+    }
   } else if (mode === "pano") {
     if (keys.has("arrowleft")) player.yaw += 1.8 * dt;
     if (keys.has("arrowright")) player.yaw -= 1.8 * dt;
