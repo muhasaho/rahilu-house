@@ -147,7 +147,7 @@ import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
 
 // Wall footprints [x0, y0, x1, y1] in plan metres (+x east, +y north),
 // exported from the Blender model: only pieces you would bump into.
-const SITE = {"walls":[[12.303,-2.812,12.613,-2.512],[12.303,-0.101,12.613,0.199],[12.303,2.61,12.613,2.91],[12.303,5.321,12.613,5.621],[12.303,8.032,12.613,8.332],[12.303,10.743,12.613,11.043],[12.303,13.454,12.613,13.754],[12.303,16.165,12.613,16.465],[-2.397,19.027,-2.097,19.337],[1.903,19.027,2.203,19.337],[4.503,19.027,4.803,19.337],[7.103,19.027,7.403,19.337],[9.703,19.027,10.003,19.337],[12.303,19.027,12.603,19.337],[-2.397,-5.683,-2.097,-5.373],[-0.164,-5.683,0.136,-5.373],[2.07,-5.683,2.37,-5.373],[4.303,-5.683,4.603,-5.373],[5.603,-5.683,5.903,-5.373],[7.836,-5.683,8.136,-5.373],[10.07,-5.683,10.37,-5.373],[12.303,-5.683,12.603,-5.373],[-2.396,19.326,-2.098,19.386],[1.904,19.326,2.233,19.386],[4.473,19.326,4.833,19.386],[7.073,19.326,7.433,19.386],[9.673,19.326,10.033,19.386],[12.273,19.326,12.602,19.386],[-2.407,-0.101,-2.097,0.199],[-2.407,2.61,-2.097,2.91],[-2.407,5.321,-2.097,5.621],[-2.407,8.032,-2.097,8.332],[-2.407,10.743,-2.097,11.043],[-2.407,13.454,-2.097,13.754],[-2.407,16.165,-2.097,16.465],[-2.407,-2.812,-2.097,-2.512],[12.453,-5.373,12.603,19.027],[2.053,19.177,12.453,19.326],[-2.247,-5.674,4.453,-5.523],[5.753,-5.674,12.453,-5.523],[-2.397,-5.373,-2.247,19.027],[11.472,13.655,11.682,14.332],[7.662,13.656,7.865,14.332],[1.0,13.657,1.204,14.333],[7.657,4.598,11.5,4.752],[9.498,6.152,9.652,8.147],[9.498,8.903,9.652,9.001],[7.657,9.001,11.5,9.155],[11.5,1.099,11.654,2.156],[11.5,2.156,11.654,3.955],[11.5,3.955,11.654,5.074],[11.5,5.074,11.654,5.676],[11.5,5.676,11.654,7.35],[11.5,7.35,11.654,7.95],[11.5,7.95,11.654,10.254],[11.5,10.254,11.654,12.052],[11.5,12.052,11.654,13.501],[6.152,13.501,6.38,13.655],[6.38,13.501,7.28,13.655],[7.28,13.501,11.654,13.655],[1.155,11.997,2.226,12.157],[2.226,11.997,4.024,12.157],[4.024,11.997,4.598,12.157],[5.802,11.997,5.998,12.157],[0.154,6.502,1.155,6.656],[7.657,1.099,7.857,1.253],[7.857,1.099,8.757,1.253],[8.757,1.099,11.5,1.253],[0.002,0.0,2.359,0.154],[3.255,0.0,4.458,0.154],[4.458,0.0,5.053,0.154],[5.053,0.0,7.657,0.154],[0.0,0.002,0.154,0.756],[0.0,0.756,0.154,2.555],[0.0,2.555,0.154,4.283],[0.0,4.283,0.154,6.082],[0.0,6.082,0.154,6.656],[1.001,6.656,1.155,7.106],[1.001,7.106,1.155,8.006],[1.001,8.006,1.155,10.647],[1.001,10.647,1.155,11.547],[1.001,11.547,1.155,12.157],[5.973,13.655,6.38,13.732],[6.38,13.655,7.28,13.732],[7.28,13.655,7.662,13.732],[11.49,4.762,11.5,5.074],[11.49,5.074,11.5,5.676],[11.49,5.676,11.5,5.988],[7.657,5.988,11.5,5.998],[7.657,4.752,11.5,4.762],[7.657,4.762,7.667,4.997],[7.657,5.9,7.667,5.988],[7.503,0.154,7.657,3.703],[7.503,4.598,7.657,4.997],[7.503,5.9,7.657,8.147],[7.503,8.903,7.657,9.155],[0.154,3.5,0.85,3.654],[3.556,3.5,5.501,3.654],[4.003,0.154,4.157,2.653],[4.003,3.402,4.157,3.5],[11.49,6.162,11.5,7.35],[11.49,7.35,11.5,7.95],[11.49,7.95,11.5,8.991],[9.652,8.991,11.5,9.001],[9.652,6.152,11.5,6.162],[9.652,6.162,9.662,8.147],[9.652,8.903,9.662,8.991],[6.152,6.502,6.201,6.656],[7.097,6.502,7.503,6.656],[5.998,6.075,6.152,13.655],[5.501,0.154,5.655,3.654],[7.657,5.998,11.5,6.152],[3.405,1.114,4.003,2.571],[3.323,0.179,4.003,1.084],[1.7,1.65,2.4,2.65],[0.779,0.154,1.124,0.752],[1.894,0.154,2.239,0.752],[1.129,0.154,1.889,0.804],[0.154,0.154,0.752,3.498],[-0.35,-3.25,0.15,-2.75],[10.05,-3.25,10.55,-2.75]],"stair":{"x0":5.655293088363954,"x1":7.503062117235345,"y0":0.15398075240594847,"y1":3.6535433070866135,"xa1":6.529177602799649,"xb0":6.62917760279965,"rise":0.18611111111111112,"going":0.28,"n1":9,"n_rise":18,"land_y1":1.4135433070866132,"land_z":1.675,"roof_z":3.35,"sr_x0":5.501312335958005,"sr_x1":7.660042869641294,"sr_y0":-0.003,"sr_y1":3.8075433070866134,"door_x0":6.66417760279965,"door_x1":7.468062117235345},"store":[6.62917760279965,0.15398075240594847,7.503062117235345,3.6535433070866135],"roof":[[0.15,0.15,7.507042869641293,6.506167979002624],[0.15,1.2488626421697289,11.503543307086614,6.506167979002624],[1.1508748906386683,1.2488626421697289,11.503543307086614,13.505293088363954]],"ground_z":-0.4,"plot":[-2.3969999999999985,-5.6735,12.603000000000002,19.3265],"lightmaps":{"LM_EXT":{"file":"lm_ext.webp","file_phone":"lm_ext_half_phone.webp","intensity":1.01531,"sun":true,"encoding":"knee"},"LM_EXT_CEIL":{"file":"lm_ext.webp","file_phone":"lm_ext_half_phone.webp","intensity":1.01531,"sun":true,"encoding":"knee"}},"light":{"sun_az":5.039854084970321,"sun_el":0.34197260687213704,"sun":[4.5176,4.2644,3.884],"sky":"sky.webp","sky_intensity":10.61741,"probe":"probe.webp","probe_intensity":5.9258,"vlight":{"LMV_PLANTS":{"intensity":1.01531,"encoding":"knee"}},"fog":[0.8442,0.8196,0.7856],"open_up":[1.3443,1.3707,1.6046],"open_down":[2.492,2.6011,2.6996],"house_box":[0.0,0.0,11.654,13.732],"look":[0.00136,0.0014,0.00145,0.0015,0.00156,0.0016,0.00166,0.00171,0.00179,0.00189,0.00206,0.0023,0.00272,0.0033,0.00417,0.0056,0.00792,0.01186,0.01897,0.03136,0.05087,0.0739,0.10005,0.12927,0.16179,0.19771,0.23693,0.27913,0.32364,0.37008,0.42138,0.47475,0.52772,0.57865,0.62666,0.67033,0.7107,0.74784,0.78193,0.81309,0.84091,0.86625,0.88943,0.91061,0.92999,0.94757,0.96345,0.97807],"look_range":[-12.47393,4.026069],"sky_phone":"sky_phone.webp","probe_phone":"probe_phone.webp"},"tex":{"House_Door_Timber":{"file":"house_door_timber.png","mean":[0.6889,0.4457,0.2418]},"House_Floor_Porcelain_Beige":{"file":"tile_floor.png","mean":[0.8845,0.8377,0.7674]},"House_Floor_Stone_Matte":{"file":"tile_wet.png","mean":[0.7975,0.7507,0.6809]},"House_Ground_Compound":{"file":"tile_ground_compound.jpg","mean":[0.6792,0.5305,0.3592]},"House_Render_White":{"file":"house_render_white.png","mean":[0.9333,0.8941,0.8235]},"S_Laterite_Road":{"file":"tile_laterite_road.jpg","mean":[0.6863,0.4235,0.2588]},"S_Pavers_Grey_Herringbone":{"file":"pavers.jpg","mean":[0.4986,0.4868,0.4594]},"House_Ledgestone":{"file":"d_ledgestone.jpg","normal":"dn_ledgestone.jpg","file_phone":"d_ledgestone_half_phone.jpg","normal_phone":"dn_ledgestone_half.jpg","mean":[0.5847,0.5294,0.4422]},"House_Sandstone_Panels":{"file":"d_sandstone_panels.jpg","normal":"dn_sandstone_panels.jpg","mean":[0.7835,0.7025,0.5709],"file_phone":"d_sandstone_panels_phone.jpg"},"House_Soffit_Timber":{"file":"d_soffit_timber.jpg","normal":"dn_soffit_timber.jpg","mean":[0.4864,0.3278,0.1802],"file_phone":"d_soffit_timber_phone.jpg"}},"panos":[]};
+const SITE = {"walls":[[12.303,-2.812,12.613,-2.512],[12.303,-0.101,12.613,0.199],[12.303,2.61,12.613,2.91],[12.303,5.321,12.613,5.621],[12.303,8.032,12.613,8.332],[12.303,10.743,12.613,11.043],[12.303,13.454,12.613,13.754],[12.303,16.165,12.613,16.465],[-2.397,19.027,-2.097,19.337],[1.903,19.027,2.203,19.337],[4.503,19.027,4.803,19.337],[7.103,19.027,7.403,19.337],[9.703,19.027,10.003,19.337],[12.303,19.027,12.603,19.337],[-2.397,-5.683,-2.097,-5.373],[-0.164,-5.683,0.136,-5.373],[2.07,-5.683,2.37,-5.373],[4.303,-5.683,4.603,-5.373],[5.603,-5.683,5.903,-5.373],[7.836,-5.683,8.136,-5.373],[10.07,-5.683,10.37,-5.373],[12.303,-5.683,12.603,-5.373],[-2.396,19.326,-2.098,19.386],[1.904,19.326,2.233,19.386],[4.473,19.326,4.833,19.386],[7.073,19.326,7.433,19.386],[9.673,19.326,10.033,19.386],[12.273,19.326,12.602,19.386],[-2.407,-0.101,-2.097,0.199],[-2.407,2.61,-2.097,2.91],[-2.407,5.321,-2.097,5.621],[-2.407,8.032,-2.097,8.332],[-2.407,10.743,-2.097,11.043],[-2.407,13.454,-2.097,13.754],[-2.407,16.165,-2.097,16.465],[-2.407,-2.812,-2.097,-2.512],[12.453,-5.373,12.603,19.027],[2.053,19.177,12.453,19.326],[-2.247,-5.674,4.453,-5.523],[5.753,-5.674,12.453,-5.523],[-2.397,-5.373,-2.247,19.027],[11.472,13.655,11.682,14.332],[7.662,13.656,7.865,14.332],[1.0,13.657,1.204,14.333],[7.657,4.598,11.5,4.752],[9.498,6.152,9.652,8.147],[9.498,8.903,9.652,9.001],[7.657,9.001,11.5,9.155],[11.5,1.099,11.654,2.156],[11.5,2.156,11.654,3.955],[11.5,3.955,11.654,5.074],[11.5,5.074,11.654,5.676],[11.5,5.676,11.654,7.35],[11.5,7.35,11.654,7.95],[11.5,7.95,11.654,10.254],[11.5,10.254,11.654,12.052],[11.5,12.052,11.654,13.501],[6.152,13.501,6.38,13.655],[6.38,13.501,7.28,13.655],[7.28,13.501,11.654,13.655],[1.155,11.997,2.226,12.157],[2.226,11.997,4.024,12.157],[4.024,11.997,4.598,12.157],[5.802,11.997,5.998,12.157],[0.154,6.502,1.155,6.656],[7.657,1.099,7.857,1.253],[7.857,1.099,8.757,1.253],[8.757,1.099,11.5,1.253],[0.002,0.0,2.359,0.154],[3.255,0.0,4.458,0.154],[4.458,0.0,5.053,0.154],[5.053,0.0,7.657,0.154],[0.0,0.002,0.154,0.756],[0.0,0.756,0.154,2.555],[0.0,2.555,0.154,4.283],[0.0,4.283,0.154,6.082],[0.0,6.082,0.154,6.656],[1.001,6.656,1.155,7.106],[1.001,7.106,1.155,8.006],[1.001,8.006,1.155,10.647],[1.001,10.647,1.155,11.547],[1.001,11.547,1.155,12.157],[5.973,13.655,6.38,13.732],[6.38,13.655,7.28,13.732],[7.28,13.655,7.662,13.732],[11.49,4.762,11.5,5.074],[11.49,5.074,11.5,5.676],[11.49,5.676,11.5,5.988],[7.657,5.988,11.5,5.998],[7.657,4.752,11.5,4.762],[7.657,4.762,7.667,4.997],[7.657,5.9,7.667,5.988],[7.503,0.154,7.657,3.703],[7.503,4.598,7.657,4.997],[7.503,5.9,7.657,8.147],[7.503,8.903,7.657,9.155],[0.154,3.5,0.85,3.654],[3.556,3.5,5.501,3.654],[4.003,0.154,4.157,2.653],[4.003,3.402,4.157,3.5],[11.49,6.162,11.5,7.35],[11.49,7.35,11.5,7.95],[11.49,7.95,11.5,8.991],[9.652,8.991,11.5,9.001],[9.652,6.152,11.5,6.162],[9.652,6.162,9.662,8.147],[9.652,8.903,9.662,8.991],[6.152,6.502,6.201,6.656],[7.097,6.502,7.503,6.656],[5.998,6.075,6.152,13.655],[5.501,0.154,5.655,3.654],[7.657,5.998,11.5,6.152],[3.405,1.114,4.003,2.571],[3.323,0.179,4.003,1.084],[1.7,1.65,2.4,2.65],[0.779,0.154,1.124,0.752],[1.894,0.154,2.239,0.752],[1.129,0.154,1.889,0.804],[0.154,0.154,0.752,3.498],[-0.35,-3.25,0.15,-2.75],[10.05,-3.25,10.55,-2.75]],"stair":{"x0":5.655293088363954,"x1":7.503062117235345,"y0":0.15398075240594847,"y1":3.6535433070866135,"xa1":6.529177602799649,"xb0":6.62917760279965,"rise":0.18611111111111112,"going":0.28,"n1":9,"n_rise":18,"land_y1":1.4135433070866132,"land_z":1.675,"roof_z":3.35,"sr_x0":5.501312335958005,"sr_x1":7.660042869641294,"sr_y0":-0.003,"sr_y1":3.8075433070866134,"door_x0":6.66417760279965,"door_x1":7.468062117235345},"store":[6.62917760279965,0.15398075240594847,7.503062117235345,3.6535433070866135],"roof":[[0.15,0.15,7.507042869641293,6.506167979002624],[0.15,1.2488626421697289,11.503543307086614,6.506167979002624],[1.1508748906386683,1.2488626421697289,11.503543307086614,13.505293088363954]],"ground_z":-0.4,"plot":[-2.3969999999999985,-5.6735,12.603000000000002,19.3265],"lightmaps":{"LM_EXT":{"file":"lm_ext.webp","file_phone":"lm_ext_half_phone.webp","intensity":1.33719,"sun":true,"encoding":"knee"},"LM_EXT_CEIL":{"file":"lm_ext.webp","file_phone":"lm_ext_half_phone.webp","intensity":1.33719,"sun":true,"encoding":"knee"},"LM_INT":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true},"LM_INT_CEIL":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true},"LM_INT_F0":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Bedroom","probe":"probe_floor_bedroom.webp","probe_intensity":0.85069},"LM_INT_F1":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Dining","probe":"probe_floor_dining.webp","probe_intensity":3.93691},"LM_INT_F2":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Hall","probe":"probe_floor_hall.webp","probe_intensity":1.96274},"LM_INT_F3":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Kitchen","probe":"probe_floor_kitchen.webp","probe_intensity":3.77624},"LM_INT_F4":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Master bathroom","probe":"probe_floor_masterbathroom.webp","probe_intensity":0.96577},"LM_INT_F5":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Master bedroom","probe":"probe_floor_masterbedroom.webp","probe_intensity":0.32153},"LM_INT_F6":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Pantry","probe":"probe_floor_pantry.webp","probe_intensity":4.68848},"LM_INT_F7":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Sitting room","probe":"probe_floor_sittingroom.webp","probe_intensity":9.20738},"LM_INT_F8":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Toilet","probe":"probe_floor_toilet.webp","probe_intensity":4.63229},"LM_INT_F9":{"file":"lm_int.webp","file_phone":"lm_int_half_phone.webp","intensity":1.39617,"sun":true,"encoding":"knee","interior":true,"room":"Walk-in closet","probe":"probe_floor_walkincloset.webp","probe_intensity":0.23972}},"light":{"sun_az":5.039854084970321,"sun_el":0.34197260687213704,"sun":[4.5176,4.2644,3.884],"sky":"sky.webp","sky_intensity":10.61741,"probe":"probe.webp","probe_intensity":5.9258,"vlight":{"LMV_PLANTS":{"intensity":1.33719,"encoding":"knee"},"LMV_INT":{"intensity":1.39617,"encoding":"knee","interior":true}},"fog":[0.8442,0.8196,0.7856],"open_up":[1.6001,1.7309,2.1213],"open_down":[2.1149,2.2983,2.3425],"house_box":[0.0,0.0,11.654,13.732],"look":[0.00136,0.0014,0.00145,0.0015,0.00156,0.0016,0.00166,0.00171,0.00179,0.00189,0.00206,0.0023,0.00272,0.0033,0.00417,0.0056,0.00792,0.01186,0.01897,0.03136,0.05087,0.0739,0.10005,0.12927,0.16179,0.19771,0.23693,0.27913,0.32364,0.37008,0.42138,0.47475,0.52772,0.57865,0.62666,0.67033,0.7107,0.74784,0.78193,0.81309,0.84091,0.86625,0.88943,0.91061,0.92999,0.94757,0.96345,0.97807],"look_range":[-12.47393,4.026069],"room_ev":{"default":2.3,"Master bedroom":2.797,"Bedroom":2.863,"Kitchen":1.679,"Sitting room":2.21,"Dining":2.514,"Hall":2.282,"Master bathroom":1.938,"Toilet":2.085,"Walk-in closet":2.151,"Pantry":2.263},"mirrors":{"LMR_0":{"file":"probe_mirror_0.webp","intensity":4.26588},"LMR_1":{"file":"probe_mirror_1.webp","intensity":1.1052}},"probe_room":"probe_room.webp","probe_room_intensity":9.93811,"indoor_fill":[1.13069,1.34253,1.71527],"sky_phone":"sky_phone.webp","probe_phone":"probe_phone.webp"},"tex":{"House_Door_Timber":{"file":"house_door_timber.png","mean":[0.6889,0.4457,0.2418]},"House_Floor_Porcelain_Beige":{"file":"tile_floor.png","mean":[0.8845,0.8377,0.7674]},"House_Floor_Stone_Matte":{"file":"tile_wet.png","mean":[0.7975,0.7507,0.6809]},"House_Ground_Compound":{"file":"tile_ground_compound.jpg","mean":[0.6792,0.5305,0.3592]},"House_Render_White":{"file":"house_render_white.png","mean":[0.9333,0.8941,0.8235]},"S_Laterite_Road":{"file":"tile_laterite_road.jpg","mean":[0.6863,0.4235,0.2588]},"S_Pavers_Grey_Herringbone":{"file":"pavers.jpg","mean":[0.4986,0.4868,0.4594]},"House_Ledgestone":{"file":"d_ledgestone.jpg","normal":"dn_ledgestone.jpg","file_phone":"d_ledgestone_half_phone.jpg","normal_phone":"dn_ledgestone_half.jpg","mean":[0.6029,0.5459,0.4562]},"House_Sandstone_Panels":{"file":"d_sandstone_panels.jpg","normal":"dn_sandstone_panels.jpg","mean":[0.7835,0.7026,0.5709],"file_phone":"d_sandstone_panels_phone.jpg"},"House_Soffit_Timber":{"file":"d_soffit_timber.jpg","normal":"dn_soffit_timber.jpg","mean":[0.4866,0.328,0.1803],"file_phone":"d_soffit_timber_phone.jpg"},"House_Bath_Wall_Tile_Beige":{"file":"d_bath_wall_tile_beige.jpg","normal":"dn_bath_wall_tile_beige.jpg","file_phone":"d_bath_wall_tile_beige_half_phone.jpg","normal_phone":"dn_bath_wall_tile_beige_half.jpg","mean":[0.7994,0.7478,0.6775]},"House_Kitchen_Granite_Cream":{"file":"d_kitchen_granite_cream.jpg","normal":"dn_kitchen_granite_cream.jpg","file_phone":"d_kitchen_granite_cream_half_phone.jpg","normal_phone":"dn_kitchen_granite_cream_half.jpg","mean":[0.7287,0.6787,0.6089]},"House_Kitchen_Mosaic_Oval":{"file":"d_kitchen_mosaic_oval.jpg","normal":"dn_kitchen_mosaic_oval.jpg","mean":[0.714,0.6885,0.6455],"file_phone":"d_kitchen_mosaic_oval_phone.jpg"}},"panos":[]};
 const WALLS = SITE.walls;
 
 // Plan metres -> three.js (Y up): (x, y) -> (x, -y)
@@ -236,7 +236,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 // it replaces three's AgX sigmoid, so greys and contrast match the renders.
 // "lite": a phone that lost its 3-D context with the baked extras reloads
 // without them (the plain lighting that always fitted); ?lite=0 / ?lite=1
-const LITE_KEY = "rahilu_lite_1793788656";     // per build: a new publish tries the full version again
+const LITE_KEY = "rahilu_lite_1793854817";     // per build: a new publish tries the full version again
 const LITE_Q = new URLSearchParams(location.search).get("lite");
 if (LITE_Q === "0") localStorage.removeItem(LITE_KEY);
 const LITE = LITE_Q === "1" || (LITE_Q !== "0" && localStorage.getItem(LITE_KEY) === "1");
@@ -334,6 +334,27 @@ if (LIGHT && LIGHT.sky) {
     setEnv(pmrem.fromEquirectangular(t).texture);
   });
 }
+// rooms (desktop): a Cycles 360 of the sitting room on the baked room
+// surfaces (glossy floors), and one per mirror
+let roomEnv = null;
+const roomEnvMats = [];
+if (LIGHT && LIGHT.probe_room && !PHONE) new THREE.TextureLoader().load("tex/" + LIGHT.probe_room, (t) => {
+  t.mapping = THREE.EquirectangularReflectionMapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  roomEnv = pmrem.fromEquirectangular(t).texture;
+  for (const m of roomEnvMats) { m.envMap = roomEnv; m.needsUpdate = true; }
+});
+function mirrorMaterial(info) {
+  const m = new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 1, roughness: 0.03 });
+  m.envMapIntensity = info.intensity;
+  new THREE.TextureLoader().load("tex/" + info.file, (t) => {
+    t.mapping = THREE.EquirectangularReflectionMapping;
+    t.colorSpace = THREE.SRGBColorSpace;
+    m.envMap = pmrem.fromEquirectangular(t).texture;
+    m.needsUpdate = true;
+  });
+  return m;
+}
 function setEnv(tex) {
   skyEnv = tex;
   for (const m of skyEnvMats) { m.envMap = skyEnv; m.needsUpdate = true; }
@@ -354,7 +375,21 @@ if (LIGHT && PHONE) setEnv(scene.environment);
 scene.environmentIntensity = 0.35;
 const hemi = new THREE.HemisphereLight(0xeef3ff, 0x8a7560, 1.5);
 scene.add(hemi);
-scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+scene.add(ambient);
+// baked export: the outside no longer uses this fill (lightmap / open sky), so
+// it is the rooms' light: warm like the renders' 3000 K lamps
+const INDOOR = { ev: 0, k: 0 };
+if (LIGHT && LIGHT.indoor_fill) {
+  // baked rooms: the fill only reaches what's left unbaked indoors (fittings,
+  // fans, glass), at the rooms' own baked light level
+  const f = LIGHT.indoor_fill, l = (f[0] + f[1] + f[2]) / 3;
+  hemi.color.setRGB(f[0] / l, f[1] / l, f[2] / l); hemi.groundColor.setRGB(0.6 * f[0] / l, 0.5 * f[1] / l, 0.4 * f[2] / l);
+  hemi.intensity = 0.4 * l; ambient.color.copy(hemi.color); ambient.intensity = 0.15 * l;
+} else if (LIGHT) {
+  hemi.color.set(0xffc690); hemi.groundColor.set(0xa8764c); hemi.intensity = 1.9;
+  ambient.color.set(0xffcca0); ambient.intensity = 0.4;
+}
 // Kunkujang, 31 May, 18:00: sun on bearing 289 deg (west-north-west),
 // ~20 deg up, as in the renders.  Plan (x east, y north) -> three (x, z = -y).
 const SUN_AZ = LIGHT ? LIGHT.sun_az : 289 * Math.PI / 180;
@@ -423,6 +458,7 @@ if (!PHONE) {
   }
   composer.addPass(gtao);
   composer.addPass(new OutputPass());
+  if (LIGHT) gtao.enabled = false;         // baked: occlusion is in the lightmaps
 }
 
 const orbit = new OrbitControls(camera, renderer.domElement);
@@ -908,8 +944,23 @@ async function finishModel(gltf) {
     }
     return lmCache[file];
   }
+  const floorEnv = {};
+  function probeEnv(file, mats) {
+    if (!floorEnv[file]) {
+      floorEnv[file] = { tex: null, mats: [] };
+      new THREE.TextureLoader().load("tex/" + file, (t) => {
+        t.mapping = THREE.EquirectangularReflectionMapping;
+        t.colorSpace = THREE.SRGBColorSpace;
+        const e = floorEnv[file];
+        e.tex = pmrem.fromEquirectangular(t).texture;
+        for (const mm of e.mats) { mm.envMap = e.tex; mm.needsUpdate = true; }
+      });
+    }
+    const e = floorEnv[file];
+    mats.forEach((mm) => { e.mats.push(mm); if (e.tex) mm.envMap = e.tex; });
+  }
   function bakeMaterial(m, lm) {
-    const key = m.uuid + lm.file;
+    const key = m.uuid + lm.file + (lm.probe || "");
     if (bakedMat[key]) return bakedMat[key];
     const b = m.clone();
     b.lightMap = lightmap(PHONE && lm.file_phone ? lm.file_phone : lm.file);
@@ -920,13 +971,30 @@ async function finishModel(gltf) {
     const maps = lm.encoding === "knee" ? MAPS.replace(
       "vec3 lightMapIrradiance = lightMapTexel.rgb * lightMapIntensity;",
       "vec3 lmE = min( lightMapTexel.rgb, vec3( 0.996 ) );\n\tvec3 lightMapIrradiance = lmE / ( 1.0 - lmE ) * lightMapIntensity;") : MAPS;
+    // rooms: no dimming of reflections by the lightmap (it's tuned for the
+    // outside's light level and killed the floors' gloss indoors)
+    const maps2 = lm.interior ? maps.replace(/radiance \*= clamp\([^;]*;/, "") : maps;
     b.onBeforeCompile = (sh) => {
       sh.fragmentShader = sh.fragmentShader
         .replace("#include <lights_fragment_begin>", lm.sun ? BEGIN_SUN : BEGIN)
-        .replace("#include <lights_fragment_maps>", maps);
+        .replace("#include <lights_fragment_maps>", maps2);
     };
-    b.customProgramCacheKey = () => (lm.sun ? "baked_sun_" + (lm.encoding || "") : "baked");
-    if (lm.sun) {
+    b.customProgramCacheKey = () => (lm.sun ? "baked_sun_" + (lm.encoding || "") + (lm.interior ? "_int" : "") : "baked");
+    if (lm.interior && lm.probe && !PHONE) {
+      // a room's floor: its own room's reflections
+      b.userData.outdoor = true;
+      b.envMapIntensity = 1.0 * lm.probe_intensity;
+      b.roughness = Math.min(b.roughness, 0.16);   // polished porcelain
+      probeEnv(lm.probe, [b]);
+    } else if (lm.interior) {
+      b.userData.outdoor = true;            // (baked: same handling)
+      if (LIGHT && LIGHT.probe_room && !PHONE) {
+        // floors: broad soft reflections; tiles: some gloss; the rest a sheen
+        b.envMapIntensity = (/floor/i.test(m.name) ? 0.45 : /tile/i.test(m.name) ? 0.4 : 0.15) *
+          LIGHT.probe_room_intensity;
+        roomEnvMats.push(b); if (roomEnv) b.envMap = roomEnv;
+      }
+    } else if (lm.sun) {
       b.userData.outdoor = true;
       if (LIGHT && LIGHT.sky) { b.envMapIntensity = ENV_I; skyEnvMats.push(b); if (skyEnv) b.envMap = skyEnv; }
     }
@@ -980,7 +1048,16 @@ async function finishModel(gltf) {
         .replace("#include <lights_fragment_maps>", MAPS);
     };
     o.customProgramCacheKey = () => "vertex_lit";
-    o.envMapIntensity = ENV_I; skyEnvMats.push(o); if (skyEnv) o.envMap = skyEnv;
+    if (info.interior) {
+      // rooms: the room probe, faintly (the yard's probe at outdoor strength
+      // drew pale blue strips on the kitchen cabinets)
+      if (LIGHT.probe_room && !PHONE) {
+        o.envMapIntensity = 0.15 * LIGHT.probe_room_intensity;
+        roomEnvMats.push(o); if (roomEnv) o.envMap = roomEnv;
+      } else { o.envMapIntensity = 0; }
+    } else {
+      o.envMapIntensity = ENV_I; skyEnvMats.push(o); if (skyEnv) o.envMap = skyEnv;
+    }
     return (vlMat[m.uuid] = o);
   }
   function vlOf(n) {
@@ -991,8 +1068,21 @@ async function finishModel(gltf) {
   const allMats = [];
   gltf.scene.traverse((n) => {
     if (!n.isMesh) return;
+    // clear glass (shower screens, cabinet doors): Cycles' glass tints what
+    // is seen through it (~0.65); multiply blending does the same here
+    if (LIGHT && !Array.isArray(n.material) && n.material.transparent && /glass_clear/i.test(n.material.name)) {
+      n.material = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.78, 0.81, 0.82),
+        transparent: true, premultipliedAlpha: true, blending: THREE.MultiplyBlending,
+        depthWrite: false, side: THREE.FrontSide, name: n.material.name });
+      n.castShadow = false;
+      return;
+    }
     const vli = vlOf(n);
-    if (vli && n.geometry.attributes.color && n.material.isMeshStandardMaterial) {
+    let mir = null;
+    for (let o = n; o && !mir; o = o.parent) mir = LIGHT && LIGHT.mirrors && LIGHT.mirrors[o.name];
+    if (mir && !PHONE) {
+      n.material = mirrorMaterial(mir);
+    } else if (vli && n.geometry.attributes.color && n.material.isMeshStandardMaterial) {
       n.material = vertexLitMaterial(n.material, vli);
     } else if (OPEN && !lmOf(n)[1] && n.material.isMeshStandardMaterial && !n.material.transparent) {
       _bb.setFromObject(n).getCenter(_c);
@@ -1022,7 +1112,10 @@ async function finishModel(gltf) {
   });
   for (const m of allMats) {
     if (m.transparent) m.depthWrite = false;
-    if (LIGHT && LIGHT.sky && m.transparent && /glass/i.test(m.name) && !m.userData.sky) {
+    // clear glass indoors (shower screens, cabinet doors): a faint reflection
+    if (LIGHT && m.transparent && /glass_clear/i.test(m.name)) m.envMapIntensity = 0.25;
+    // the yard's reflection belongs on the windows, not the shower glass
+    if (LIGHT && LIGHT.sky && m.transparent && /glass_tinted/i.test(m.name) && !m.userData.sky) {
       m.userData.sky = true;
       m.envMapIntensity = ENV_I * 2.5;     // the pane's alpha halves it again
       skyEnvMats.push(m);
@@ -1108,6 +1201,21 @@ renderer.setAnimationLoop(() => {
     player.z += (target - player.z) * Math.min(1, dt * 10);   // ease up/down steps
     camera.position.set(player.x, player.z + EYE, -player.y);
     camera.rotation.set(player.pitch, player.yaw, 0);
+    // eye adaptation: rooms are darker than the yard; open up indoors like a
+    // camera would (the renders' rooms use +2.3 EV over the outside)
+    if (LIGHT) {
+      const px = SHOT ? SHOT[0] : player.x, py = SHOT ? SHOT[1] : player.y;
+      const r = roomAt(px, py);
+      const inside = ROOMS.some(([n]) => n === r) && r !== "Porch";
+      // the renders' exposure for this room (stops over the outside)
+      const RE = LIGHT.room_ev || { default: 0.9 };
+      const target = inside ? (RE[r] ?? RE.default) : 0;
+      INDOOR.ev += (target - INDOOR.ev) * (SHOT ? 1 : Math.min(1, dt * 2.5));
+      renderer.toneMappingExposure = EXPOSURE * Math.pow(2, INDOOR.ev);
+      // the studio reflections on unbaked fittings must not brighten with the
+      // indoor exposure (pale taps, white fans)
+      scene.environmentIntensity = 0.35 * Math.pow(2, -INDOOR.ev);
+    }
     if (SHOT) {
       camera.position.set(SHOT[0], SHOT[2], -SHOT[1]);
       camera.rotation.set(SHOT[4], SHOT[3], 0);
@@ -1142,6 +1250,7 @@ renderer.setAnimationLoop(() => {
     }
   }
 });
-let frames = 0, slowFrames = 0, fastFrames = 0, gtaoWanted = !PHONE;
+// baked export: the lightmaps already hold the occlusion, so no screen-space AO
+let frames = 0, slowFrames = 0, fastFrames = 0, gtaoWanted = !PHONE && !LIGHT;
 setMode("walk");
 </script>
