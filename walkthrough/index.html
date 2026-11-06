@@ -226,6 +226,18 @@ try {
 // half-float buffers, 4x MSAA copies and AO targets ran iPhones out of GPU
 // memory), a smaller shadow map, lower pixel ratio, one 360 photo in memory.
 const PHONE = navigator.maxTouchPoints > 0 && matchMedia("(pointer: coarse)").matches;
+
+// This PowerVR driver crashes on the one-element sun-shadow sampler array.
+// The walkthrough has one shadow-casting directional light; keep the PCF
+// shader and texture, but expose its sampler as a scalar on PowerVR phones.
+const gl = renderer.getContext();
+const gpuInfo = gl.getExtension("WEBGL_debug_renderer_info");
+const POWERVR = PHONE && gpuInfo && /PowerVR/i.test(gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL));
+if (POWERVR) for (const k of ["shadowmap_pars_fragment", "lights_fragment_begin", "shadowmask_pars_fragment"]) {
+  THREE.ShaderChunk[k] = THREE.ShaderChunk[k]
+    .replace("directionalShadowMap[ NUM_DIR_LIGHT_SHADOWS ]", "directionalShadowMap")
+    .replace(/directionalShadowMap\[ i \]/g, "directionalShadowMap");
+}
 renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, PHONE ? 1.5 : 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 // AgX, the renders' view transform, with Blender's "Medium High Contrast"
@@ -1318,6 +1330,17 @@ async function finishModel(gltf) {
     for (const m of (Array.isArray(n.material) ? n.material : [n.material])) allMats.push(m);
   });
   for (const m of allMats) {
+    if (POWERVR && !m.userData.scalarSunShadow) {
+      m.userData.scalarSunShadow = true;
+      const compile = m.onBeforeCompile;
+      m.onBeforeCompile = function (sh, r) {
+        compile.call(this, sh, r);
+        if (sh.uniforms.directionalShadowMap) Object.defineProperty(sh.uniforms.directionalShadowMap, "value", {
+          get: () => sun.shadow.map?.texture, set: () => {}, configurable: true
+        });
+      };
+    }
+
     if (m.transparent) m.depthWrite = false;
     // clear glass indoors (shower screens, cabinet doors): a faint reflection
     if (LIGHT && m.transparent && /glass_clear/i.test(m.name)) m.envMapIntensity = 0.25;
