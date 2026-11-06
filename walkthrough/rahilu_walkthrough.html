@@ -222,17 +222,39 @@ try {
   document.getElementById("loadBar").parentElement.hidden = true;
   throw e;
 }
-// Phones get a lighter path: no post-processing chain (its full-screen
-// half-float buffers, 4x MSAA copies and AO targets ran iPhones out of GPU
-// memory), a smaller shadow map, lower pixel ratio, one 360 photo in memory.
-const PHONE = navigator.maxTouchPoints > 0 && matchMedia("(pointer: coarse)").matches;
+// Phones get the computer version (AO, reflections, room probes, full
+// textures) unless it has crashed on that phone.  PHONE below means the
+// reduced version: no post-processing chain (its full-screen half-float
+// buffers, 4x MSAA copies and AO targets once ran iPhones out of GPU memory),
+// a smaller shadow map, lower pixel ratio, one 360 photo in memory.  A phone
+// drops to it after a real crash only (owner, 2026-11-05): a lost 3-D context
+// (handler below), or a tab the browser killed - the "trying" mark is set on
+// every full load and cleared once it has rendered for a while or the page is
+// left normally, so a mark still there on the next load means it died.
+// ?full=1 / ?phone=1 force either version.
+const TOUCH = navigator.maxTouchPoints > 0 && matchMedia("(pointer: coarse)").matches;
+const QS = new URLSearchParams(location.search);
+const PREFS = {
+  get: (k) => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+  set: (k, v) => { try { if (v === null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch (e) { } },
+};
+const REDUCED_KEY = "rahilu_reduced_1793935768", TRYING_KEY = "rahilu_full_trying_1793935768";
+if (QS.get("full") === "1") { PREFS.set(REDUCED_KEY, null); PREFS.set(TRYING_KEY, null); }
+if (TOUCH && PREFS.get(TRYING_KEY)) { PREFS.set(REDUCED_KEY, "1"); PREFS.set(TRYING_KEY, null); }
+const PHONE = TOUCH && (QS.get("phone") === "1" ||
+  (QS.get("full") !== "1" && PREFS.get(REDUCED_KEY) === "1"));
+const TRYING_FULL = TOUCH && !PHONE;
+if (TRYING_FULL) {
+  PREFS.set(TRYING_KEY, String(Date.now()));
+  addEventListener("pagehide", () => PREFS.set(TRYING_KEY, null));
+}
 
 // This PowerVR driver crashes on the one-element sun-shadow sampler array.
 // The walkthrough has one shadow-casting directional light; keep the PCF
 // shader and texture, but expose its sampler as a scalar on PowerVR phones.
 const gl = renderer.getContext();
 const gpuInfo = gl.getExtension("WEBGL_debug_renderer_info");
-const POWERVR = PHONE && gpuInfo && /PowerVR/i.test(gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL));
+const POWERVR = TOUCH && gpuInfo && /PowerVR/i.test(gl.getParameter(gpuInfo.UNMASKED_RENDERER_WEBGL));
 if (POWERVR) for (const k of ["shadowmap_pars_fragment", "lights_fragment_begin", "shadowmask_pars_fragment"]) {
   THREE.ShaderChunk[k] = THREE.ShaderChunk[k]
     .replace("directionalShadowMap[ NUM_DIR_LIGHT_SHADOWS ]", "directionalShadowMap")
@@ -248,7 +270,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 // it replaces three's AgX sigmoid, so greys and contrast match the renders.
 // "lite": a phone that lost its 3-D context with the baked extras reloads
 // without them (the plain lighting that always fitted); ?lite=0 / ?lite=1
-const LITE_KEY = "rahilu_lite_1793923092";     // per build: a new publish tries the full version again
+const LITE_KEY = "rahilu_lite_1793935768";     // per build: a new publish tries the full version again
 const LITE_Q = new URLSearchParams(location.search).get("lite");
 if (LITE_Q === "0") localStorage.removeItem(LITE_KEY);
 const LITE = LITE_Q === "1" || (LITE_Q !== "0" && localStorage.getItem(LITE_KEY) === "1");
@@ -294,6 +316,13 @@ stage.appendChild(renderer.domElement);
 // offer a reload instead of freezing on a blank screen
 renderer.domElement.addEventListener("webglcontextlost", (e) => {
   e.preventDefault();
+  // the computer version crashed on this phone: reload in the phone version
+  if (TRYING_FULL) {
+    PREFS.set(REDUCED_KEY, "1");
+    PREFS.set(TRYING_KEY, null);
+    location.reload();
+    return;
+  }
   // first time on a phone with the baked extras: reload once in lite mode
   if (PHONE && !LITE && SITE.light) {
     localStorage.setItem(LITE_KEY, "1");
@@ -1390,6 +1419,8 @@ async function finishModel(gltf) {
     n.material = Array.isArray(n.material) ? ms : ms[0];
   });
   setTimeout(() => (window.RAHILU_READY = true), 500);
+  // the full version has settled on this phone
+  if (TRYING_FULL) setTimeout(() => { if (!renderer.getContext().isContextLost()) PREFS.set(TRYING_KEY, null); }, 8000);
 }
 loadModel().catch((err) => {
   loadText.textContent = `The model didn't load (${err.message}). Reload the page to try again.`;
